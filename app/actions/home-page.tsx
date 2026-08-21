@@ -16,7 +16,6 @@ const content = {
   links: [
     { label: "GitHub", href: "https://github.com/davepack" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/dpack" },
-    { label: "Email", href: "mailto:dpack3.0@gmail.com" },
   ],
 };
 
