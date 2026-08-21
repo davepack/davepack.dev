@@ -3,14 +3,13 @@ import { css } from "remix/ui";
 
 import { Document } from "./document.tsx";
 
-// PLACEHOLDER COPY: the bio and role line below are best guesses pending
-// Dave's real docs (resume etc.). Update `role`, `bio`, and `links` freely —
-// everything on the page is driven by this object.
+// Everything on the page is driven by this object.
 const content = {
   name: "Dave Pack",
-  role: "Software engineer",
+  role: "Full-stack engineer & web platform lead · Arvada, Colorado",
   bio: [
-    "I build software for the web and for mobile. Over the years that has meant React and React Native apps, open source libraries, and lately a lot of time spent with AI tooling and the modern edge.",
+    "I've spent 15 years building for the web — the last eight as web platform lead for Kroger's e-commerce site, where my team stewards architecture, performance, and code quality for a codebase shared by more than twenty teams and eleven million weekly visitors.",
+    "I care about leaving codebases and teams better than I found them: architecture decision records, pragmatic standards, pairing, and a daily AI-native workflow with Claude Code. Before Kroger I worked on open source React Native tooling at Expo, shipped a cross-platform mobile app, and cofounded a startup.",
     "This site is intentionally small. The previous version, preserved in amber since 2018, lives on at v1.davepack.dev.",
   ],
   links: [
