@@ -1,0 +1,26 @@
+{
+  "name": "davepack-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24.3.0"
+  },
+  "dependencies": {
+    "remix": "^3.0.0-beta.10"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest",
+    "wrangler": "^4.0.0"
+  },
+  "allowScripts": {
+    "workerd@1.20260820.1": true,
+    "esbuild@0.27.7": true,
+    "esbuild@0.28.1": true
+  }
+}
