@@ -1,0 +1,11 @@
+{
+  "name": "davepack-com-redirect",
+  "main": "worker.ts",
+  "compatibility_date": "2026-08-01",
+  // Zone routes (not custom domains): both hostnames already have proxied
+  // GitHub-Pages DNS records, which routes happily sit in front of.
+  "routes": [
+    { "pattern": "davepack.com/*", "zone_name": "davepack.com" },
+    { "pattern": "www.davepack.com/*", "zone_name": "davepack.com" }
+  ]
+}
