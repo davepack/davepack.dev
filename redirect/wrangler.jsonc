@@ -6,6 +6,6 @@
   // GitHub-Pages DNS records, which routes happily sit in front of.
   "routes": [
     { "pattern": "davepack.com/*", "zone_name": "davepack.com" },
-    { "pattern": "www.davepack.com/*", "zone_name": "davepack.com" }
-  ]
+    { "pattern": "www.davepack.com/*", "zone_name": "davepack.com" },
+  ],
 }

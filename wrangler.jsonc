@@ -5,13 +5,13 @@
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
   },
   // The zone's existing proxied DNS record predates this Worker, so we bind
   // with a zone route (custom domains refuse hostnames that already have
   // externally managed records, and the OAuth token can't edit DNS).
   "routes": [{ "pattern": "davepack.dev/*", "zone_name": "davepack.dev" }],
   "observability": {
-    "enabled": true
-  }
+    "enabled": true,
+  },
 }

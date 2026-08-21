@@ -1,14 +1,14 @@
-import { router } from './app/router.ts'
+import { router } from "./app/router.ts";
 
 export default {
   async fetch(request: Request): Promise<Response> {
     try {
-      return await router.fetch(request)
+      return await router.fetch(request);
     } catch (error) {
       if (!(request.signal.aborted && error === request.signal.reason)) {
-        console.error(error)
+        console.error(error);
       }
-      return new Response('Internal Server Error', { status: 500 })
+      return new Response("Internal Server Error", { status: 500 });
     }
   },
-}
+};
