@@ -6,6 +6,7 @@ import { Document } from "./document.tsx";
 // Everything on the page is driven by this object.
 const content = {
   name: "Dave Pack",
+  avatar: { src: "/profile.jpeg", alt: "Portrait of Dave Pack" },
   role: "Full-stack engineer & web platform lead · Arvada, Colorado",
   bio: [
     "I've spent 15 years building for the web — the last eight at Kroger, where I now lead the web platform team that stewards architecture, performance, and code quality for an e-commerce codebase shared by more than twenty teams and eleven million weekly visitors.",
@@ -78,6 +79,21 @@ export function HomePage() {
 function Header() {
   return () => (
     <header>
+      <img
+        src={content.avatar.src}
+        alt={content.avatar.alt}
+        width={88}
+        height={88}
+        mix={css({
+          display: "block",
+          width: "88px",
+          height: "88px",
+          borderRadius: "50%",
+          objectFit: "cover",
+          border: "1px solid var(--rule)",
+          marginBottom: "1.25rem",
+        })}
+      />
       <h1
         mix={css({
           margin: 0,

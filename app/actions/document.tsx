@@ -23,7 +23,7 @@ export function Document(handle: Handle<DocumentProps>) {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="color-scheme" content="light dark" />
           <meta name="description" content={description} />
-          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
           <title>{title}</title>
           {head}
         </head>
