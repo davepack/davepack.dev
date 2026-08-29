@@ -9,7 +9,7 @@ const content = {
   avatar: { src: "/profile.jpeg", alt: "Portrait of Dave Pack" },
   role: "Full-stack engineer & web platform lead · Arvada, Colorado",
   bio: [
-    "I've spent 15 years building for the web — the last eight at Kroger, where I now lead the web platform team that stewards architecture, performance, and code quality for an e-commerce codebase shared by more than twenty teams and eleven million weekly visitors.",
+    "I've spent 15 years building for the web, the last eight at Kroger, where I now lead the web platform team that stewards architecture, performance, and code quality for an e-commerce codebase shared by more than twenty teams and eleven million weekly visitors.",
     "I care about leaving codebases and teams better than I found them: architecture decision records, pragmatic standards, pairing, and a daily AI-native workflow with Claude Code. Before Kroger I worked on open source React Native tooling at Expo, shipped a cross-platform mobile app, and cofounded a startup.",
   ],
   links: [
