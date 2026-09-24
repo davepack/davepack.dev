@@ -6,27 +6,27 @@ This app was scaffolded with `remix new`. Use these conventions when continuing 
 
 ```sh
 npm i
-npm run dev
-npm run hmr
-npm run start
-npm test
+npm run dev        # wrangler dev at http://localhost:8787
+npm run deploy
 npm run typecheck
+npm run lint
+npm run fmt
 ```
+
+The app is server-rendered only and runs on Cloudflare Workers. There is no client entry, no asset server, and no test suite yet.
 
 ## Building Features
 
-Refer to ./.agents/skills/remix/SKILL.md
+Refer to ./.agents/skills/remix/SKILL.md for the Remix mental model and how to find guides and API READMEs through `node_modules/remix/INDEX.md`.
 
 ## Starter Layout
 
 - `app/actions/controller.tsx` owns the top-level route actions
 - `app/actions/home-page.tsx` and `app/actions/document.tsx` render the route-owned starter UI
-- `app/actions/public/` contains the browser runtime entry and interactive prompt button
-- `app/routes.ts` defines the shared route contract used by server and browser modules for type-safe hrefs
+- `app/routes.ts` defines the shared route contract used for type-safe hrefs
 - `app/router.ts` wires routes to route handlers
 - `app/middleware/render.tsx` installs the request-scoped renderer used by actions
-- `app/assets.ts` owns the server-side asset pipeline used by the asset route and renderer
-- Root `public/` contains static files served unchanged from the app root
+- Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets
 
 ## Route Ownership
 

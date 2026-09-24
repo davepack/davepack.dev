@@ -11,7 +11,7 @@
     "fmt:check": "oxfmt --check"
   },
   "dependencies": {
-    "remix": "^3.0.0-beta.10"
+    "remix": "^3.0.0-rc.3"
   },
   "devDependencies": {
     "@types/node": "latest",
