@@ -26,6 +26,8 @@ Refer to ./.agents/skills/remix/SKILL.md for the Remix mental model and how to f
 - `app/routes.ts` defines the shared route contract used for type-safe hrefs
 - `app/router.ts` wires routes to route handlers
 - `app/middleware/render.tsx` installs the request-scoped renderer used by actions
+- `app/data/resume.ts` is the only module that reads `data/davepack-resume.json`. It never exposes `profile` and drops any entry marked `verify: true`, so clear that flag in the JSON to publish an entry
+- `app/actions/home-*.tsx` are the home route's sections (work timeline, skill stickers, flourishes, shared primitives)
 - Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets
 
 ## Route Ownership

@@ -1,0 +1,899 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "generatedAt": "2026-09-24",
+    "purpose": "Structured resume data for davepack.dev. Skills are normalized in `skills` and referenced by id from `experience`, `projects`, and `stories`, so the site can render by job, by skill, or by timeline without duplicating copy.",
+    "conventions": {
+      "dates": "YYYY-MM, or null when current/unknown. `end: null` with `current: true` means ongoing.",
+      "voice": "`highlights` and per-job `usage` blurbs are in neutral resume voice (no pronouns). `profile.summary`, `stories`, and `principles` are first person, written for the site.",
+      "proficiency": "1 = familiar, 2 = productive, 3 = strong, 4 = expert / could teach it, 5 = deep specialty.",
+      "featured": "Skills and entries with `featured: false` are historical or minor; include for completeness (search, timeline) but keep out of the headline views.",
+      "verify": "Fields marked `\"verify\": true` or values of null are inferred or unknown and should be confirmed by Dave before publishing."
+    },
+    "todo": [
+      "profile.links.github: confirm repo URL for the budgeting app (projects[0].links.repo).",
+      "skills: `typescript.yearsInProduction` and `sql.yearsInProduction` are null; fill in.",
+      "experience[kroger].teamMoves: dates of the two team moves are unknown; add if you want a timeline.",
+      "experience[student-web-dev]: employer name(s) for the 2011–2015 student role are unknown.",
+      "Decide whether to publish legacy skills (mongodb, firebase, realm, meteor, angularjs, jquery, lamp). They are included with featured:false because this file is meant to be exhaustive; they were deliberately left off the one-page resume."
+    ]
+  },
+
+  "profile": {
+    "name": "Dave Pack",
+    "headline": "Full-Stack Software Engineer · Web Platform Lead",
+    "headlineAlternates": [
+      "Staff-Level Full-Stack Engineer",
+      "Full-Stack Software Engineer (Node.js & React)"
+    ],
+    "location": { "city": "Arvada", "region": "CO", "country": "US", "timezone": "America/Denver" },
+    "remote": true,
+    "links": {
+      "website": "https://davepack.dev",
+      "github": "https://github.com/davepack",
+      "linkedin": "https://www.linkedin.com/in/dpack"
+    },
+    "yearsExperience": {
+      "buildingForTheWeb": 15,
+      "shippingProducts": 11,
+      "since": "2011"
+    },
+    "summaryShort": "Full-stack engineer: 15 years building for the web, 11 shipping products in JavaScript, React, and Node. Web Platform Lead for Kroger's e-commerce site. Daily practitioner of AI-native development.",
+    "summary": "I'm a full-stack engineer with 15 years building for the web and 11 shipping production software in JavaScript, React, and Node. For the last eight years I've been Web Platform Lead for Kroger's e-commerce site, where I lead a four-developer platform team that owns architecture, performance, and code quality for a codebase shared by more than twenty teams and serving over eleven million weekly visitors. I influence through collaboration rather than authority: architecture and standards boards, ADRs, and a lot of pairing. I like modernizing legacy systems while keeping them stable, and I practice AI-native development every day with Claude Code.",
+    "traits": [
+      {
+        "name": "Intuitive UI engineer",
+        "blurb": "Empathy for the user, working knowledge of UX design, and attention to the details that make an interface feel right."
+      },
+      {
+        "name": "Breadth across the stack",
+        "blurb": "Front-end, back-end, and mobile, with a track record of picking up new technologies quickly and putting them into production."
+      },
+      {
+        "name": "Communicator",
+        "blurb": "Experience in customer support, user interviewing, prototyping, user testing, and working in interdisciplinary teams."
+      }
+    ]
+  },
+
+  "skills": [
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "category": "language",
+      "yearsInProduction": 15,
+      "firstUsed": "2011",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "The constant across every role since 2011, from jQuery-era student work to modern ESM, Node services, and React.",
+      "related": ["typescript", "node", "react"]
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "category": "language",
+      "yearsInProduction": null,
+      "firstUsed": null,
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "verify": true,
+      "summary": "Primary language for current front-end and Node work, including the React Router 7 migration and the budgeting app.",
+      "related": ["javascript", "react", "node"]
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "category": "frontend",
+      "yearsInProduction": 11,
+      "firstUsed": "2015",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Core UI library across every role since 2015, at scales from a solo startup to a 20+-team enterprise codebase.",
+      "related": ["react-router", "redux", "react-native", "typescript"]
+    },
+    {
+      "id": "react-router",
+      "name": "React Router",
+      "category": "frontend",
+      "aliases": ["React Router 7 framework mode", "Remix"],
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Deep experience from v5 through v7 framework mode (the Remix lineage), including leading the migration of a large legacy v5 app with a home-built SSR server directly to v7.",
+      "related": ["react", "ssr", "legacy-modernization"]
+    },
+    {
+      "id": "redux",
+      "name": "Redux",
+      "category": "frontend",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": false,
+      "summary": "State management in Kroger's e-commerce codebase.",
+      "related": ["react"]
+    },
+    {
+      "id": "ssr",
+      "name": "Server-Side Rendering",
+      "category": "frontend",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Maintains a home-built SSR server for a high-traffic React app and builds new work on React Router 7 framework mode SSR.",
+      "related": ["react-router", "node"]
+    },
+    {
+      "id": "node",
+      "name": "Node.js",
+      "category": "backend",
+      "yearsInProduction": 11,
+      "firstUsed": "2015",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Back-end runtime across every role since 2015: startup product, Expo tooling, Kroger services and SSR, and the budgeting app.",
+      "related": ["koa", "express", "typescript", "ssr"]
+    },
+    {
+      "id": "koa",
+      "name": "Koa",
+      "category": "backend",
+      "yearsInProduction": null,
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "verify": true,
+      "summary": "Node web framework used for services and middleware.",
+      "related": ["node", "express"]
+    },
+    {
+      "id": "express",
+      "name": "Express",
+      "category": "backend",
+      "yearsInProduction": null,
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "verify": true,
+      "summary": "Node web framework used for services and SSR.",
+      "related": ["node", "koa"]
+    },
+    {
+      "id": "rest-api-design",
+      "name": "REST API Design",
+      "category": "backend",
+      "yearsInProduction": 11,
+      "firstUsed": "2015",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Designing and consuming HTTP APIs between React front-ends and Node services.",
+      "related": ["node", "sql"]
+    },
+    {
+      "id": "sql",
+      "name": "SQL",
+      "category": "data",
+      "yearsInProduction": null,
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "verify": true,
+      "summary": "Relational data modeling and queries, most recently through Prisma in the budgeting app.",
+      "related": ["prisma"]
+    },
+    {
+      "id": "prisma",
+      "name": "Prisma ORM",
+      "category": "data",
+      "yearsInProduction": 1,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Schema, migrations, and typed queries for the budgeting app's SQL data layer.",
+      "related": ["sql", "typescript"]
+    },
+    {
+      "id": "react-native",
+      "name": "React Native",
+      "category": "mobile",
+      "yearsInProduction": 3,
+      "firstUsed": "2016",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Shipped a production cross-platform app in 2016–17, contributed to the ecosystem at Expo, and currently builds the mobile side of the budgeting app.",
+      "related": ["expo", "react", "react-navigation"]
+    },
+    {
+      "id": "expo",
+      "name": "Expo",
+      "category": "mobile",
+      "yearsInProduction": 2,
+      "firstUsed": "2017",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Worked at Expo on the platform itself, and uses it today for the budgeting app's mobile client.",
+      "related": ["react-native"]
+    },
+    {
+      "id": "react-navigation",
+      "name": "react-navigation",
+      "category": "mobile",
+      "yearsInProduction": 1,
+      "firstUsed": "2017",
+      "current": false,
+      "proficiency": 4,
+      "featured": false,
+      "summary": "Open-source contributor with merged PRs while at Expo.",
+      "related": ["react-native", "open-source"]
+    },
+    {
+      "id": "tailwind",
+      "name": "Tailwind CSS",
+      "category": "frontend",
+      "yearsInProduction": 1,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Utility-first styling for the budgeting app, paired with shadcn/ui.",
+      "related": ["shadcn-ui", "css"]
+    },
+    {
+      "id": "shadcn-ui",
+      "name": "shadcn/ui",
+      "category": "frontend",
+      "yearsInProduction": 1,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Component foundation for the budgeting app's web interface.",
+      "related": ["tailwind", "react"]
+    },
+    {
+      "id": "css",
+      "name": "HTML & CSS",
+      "category": "frontend",
+      "yearsInProduction": 15,
+      "firstUsed": "2011",
+      "current": true,
+      "proficiency": 4,
+      "featured": false,
+      "summary": "Foundational front-end skill across every role.",
+      "related": ["tailwind"]
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "category": "cloud",
+      "aliases": ["Cloudflare Workers", "Cloudflare Tunnels", "Cloudflare DNS", "Email Workers"],
+      "yearsInProduction": 1,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "DNS, Email Workers, and Tunnels for the budgeting app's infrastructure and for secure remote development.",
+      "related": ["node"]
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "category": "testing",
+      "yearsInProduction": null,
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "verify": true,
+      "summary": "UI test runner for Kroger's e-commerce app, backed by shared mocking infrastructure.",
+      "related": ["msw", "testing-standards"]
+    },
+    {
+      "id": "msw",
+      "name": "MSW (Mock Service Worker)",
+      "category": "testing",
+      "yearsInProduction": null,
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "verify": true,
+      "summary": "Built server-side mocking for Playwright UI tests so teams can test against deterministic API responses.",
+      "related": ["playwright", "testing-standards"]
+    },
+    {
+      "id": "testing-standards",
+      "name": "Testing Practices & Standards",
+      "category": "practice",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Defines testing standards for a 20+-team codebase and partners with QA to raise testing practices across it.",
+      "related": ["playwright", "msw", "code-quality"]
+    },
+    {
+      "id": "ai-native-development",
+      "name": "AI-Native Development",
+      "category": "ai",
+      "aliases": ["Claude Code", "spec-driven development", "AI-assisted coding"],
+      "yearsInProduction": 1,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Daily practitioner with Claude Code: spec-driven workflows, AI-assisted review and test generation, and using AI to explore and validate architectural paths, not just generate code.",
+      "related": ["react-router", "legacy-modernization"]
+    },
+    {
+      "id": "architecture",
+      "name": "Software Architecture & ADRs",
+      "category": "practice",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Founded and leads an architecture board; authors and reviews Architecture Decision Records that set technical direction for a large shared codebase.",
+      "related": ["code-quality", "technical-leadership"]
+    },
+    {
+      "id": "code-quality",
+      "name": "Code Quality Standards",
+      "category": "practice",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Leads a standards board defining code-quality and testing standards adopted by all contributing teams, rolled out through pairing rather than mandate.",
+      "related": ["architecture", "testing-standards"]
+    },
+    {
+      "id": "performance",
+      "name": "Web Performance",
+      "category": "practice",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "Platform team ownership of performance for a site serving 11M+ weekly visitors.",
+      "related": ["ssr", "react"]
+    },
+    {
+      "id": "legacy-modernization",
+      "name": "Legacy Modernization",
+      "category": "practice",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Incrementally modernizing a large legacy codebase while keeping production stable, including the React Router v5 to v7 migration.",
+      "related": ["react-router", "ai-native-development", "architecture"]
+    },
+    {
+      "id": "technical-leadership",
+      "name": "Technical Leadership",
+      "category": "leadership",
+      "yearsInProduction": 7,
+      "firstUsed": "2019",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Tech lead since the first year at Kroger; leads a four-developer platform team and influences 20+ contributing teams without formal authority.",
+      "related": ["mentoring", "architecture", "cross-team-collaboration"]
+    },
+    {
+      "id": "mentoring",
+      "name": "Mentoring & Pairing",
+      "category": "leadership",
+      "yearsInProduction": 7,
+      "firstUsed": "2019",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Pairs constantly and trusts people with responsibility early; twice moved to lead a new team and left behind a teammate ready to become tech lead.",
+      "related": ["technical-leadership"]
+    },
+    {
+      "id": "cross-team-collaboration",
+      "name": "Cross-Team Collaboration",
+      "category": "leadership",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 5,
+      "featured": true,
+      "summary": "Facilitates standards and communication across 20+ teams contributing to one codebase, and partners with QA, product, and design as peers.",
+      "related": ["technical-leadership", "code-quality"]
+    },
+    {
+      "id": "ux",
+      "name": "UX & User Research",
+      "category": "product",
+      "aliases": ["user interviewing", "prototyping", "user testing"],
+      "yearsInProduction": null,
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Working knowledge of UX design plus hands-on user interviewing, prototyping, user testing, and customer support experience.",
+      "related": ["react"]
+    },
+    {
+      "id": "open-source",
+      "name": "Open Source",
+      "category": "practice",
+      "yearsInProduction": 1,
+      "firstUsed": "2017",
+      "current": false,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Contributor to Expo and React Native libraries, including merged PRs to react-navigation.",
+      "related": ["react-navigation", "expo"]
+    },
+    {
+      "id": "electron",
+      "name": "Electron",
+      "category": "desktop",
+      "yearsInProduction": 1,
+      "firstUsed": "2017",
+      "current": false,
+      "proficiency": 3,
+      "featured": false,
+      "summary": "Desktop tooling work at Expo.",
+      "related": ["node"]
+    },
+    {
+      "id": "mobx",
+      "name": "MobX",
+      "category": "frontend",
+      "yearsInProduction": 1,
+      "firstUsed": "2016",
+      "current": false,
+      "proficiency": 3,
+      "featured": false,
+      "summary": "State management for a React Native app in 2016–17.",
+      "related": ["react-native"]
+    },
+    {
+      "id": "i18n",
+      "name": "Internationalization",
+      "category": "practice",
+      "yearsInProduction": 1,
+      "firstUsed": "2016",
+      "current": false,
+      "proficiency": 3,
+      "featured": false,
+      "summary": "Shipped Spanish localization for a React Native app.",
+      "related": ["react-native"]
+    },
+    {
+      "id": "realm",
+      "name": "Realm Mobile Database",
+      "category": "data",
+      "yearsInProduction": 1,
+      "firstUsed": "2016",
+      "current": false,
+      "proficiency": 2,
+      "featured": false,
+      "legacy": true,
+      "summary": "On-device database for a React Native app in 2016–17.",
+      "related": ["react-native"]
+    },
+    {
+      "id": "firebase",
+      "name": "Firebase",
+      "category": "cloud",
+      "yearsInProduction": 1,
+      "firstUsed": "2016",
+      "current": false,
+      "proficiency": 2,
+      "featured": false,
+      "legacy": true,
+      "summary": "Backend services for a React Native app in 2016–17.",
+      "related": ["react-native"]
+    },
+    {
+      "id": "meteor",
+      "name": "Meteor",
+      "category": "backend",
+      "yearsInProduction": 1,
+      "firstUsed": "2015",
+      "current": false,
+      "proficiency": 3,
+      "featured": false,
+      "legacy": true,
+      "summary": "Full-stack framework (v1.3) for a startup product in 2015–16.",
+      "related": ["node", "mongodb"]
+    },
+    {
+      "id": "mongodb",
+      "name": "MongoDB",
+      "category": "data",
+      "yearsInProduction": 1,
+      "firstUsed": "2015",
+      "current": false,
+      "proficiency": 2,
+      "featured": false,
+      "legacy": true,
+      "summary": "Database for a Meteor-based startup product in 2015–16.",
+      "related": ["meteor"]
+    },
+    {
+      "id": "angularjs",
+      "name": "AngularJS (1.x)",
+      "category": "frontend",
+      "yearsInProduction": 1,
+      "firstUsed": "2015",
+      "current": false,
+      "proficiency": 3,
+      "featured": false,
+      "legacy": true,
+      "summary": "Front-end framework for FamilySearch's search feature in 2015.",
+      "related": ["javascript"]
+    },
+    {
+      "id": "jquery",
+      "name": "jQuery",
+      "category": "frontend",
+      "yearsInProduction": 4,
+      "firstUsed": "2011",
+      "current": false,
+      "proficiency": 3,
+      "featured": false,
+      "legacy": true,
+      "summary": "Front-end toolkit for student web development work, 2011–2015.",
+      "related": ["javascript"]
+    },
+    {
+      "id": "lamp",
+      "name": "LAMP Stack",
+      "category": "backend",
+      "aliases": ["PHP", "MySQL", "Apache"],
+      "yearsInProduction": 4,
+      "firstUsed": "2011",
+      "current": false,
+      "proficiency": 2,
+      "featured": false,
+      "legacy": true,
+      "summary": "Server-side stack for student web development work, 2011–2015.",
+      "related": ["sql"]
+    }
+  ],
+
+  "experience": [
+    {
+      "id": "kroger",
+      "title": "Web Platform Lead / Front-end Developer",
+      "titleProgression": [
+        { "title": "Front-end Web Developer (team contributor)", "start": "2018-07", "end": null, "verify": true },
+        { "title": "Tech Lead", "start": "2019", "end": null, "verify": true },
+        { "title": "Web Platform Lead", "start": null, "end": null, "verify": true }
+      ],
+      "org": "Kroger Technology",
+      "orgUrl": "https://www.kroger.com",
+      "location": "Portland, OR / Remote",
+      "remote": true,
+      "type": "full-time",
+      "start": "2018-07",
+      "end": null,
+      "current": true,
+      "featured": true,
+      "summary": "Lead the web platform team for Kroger's e-commerce site, owning architecture, performance, and code quality for a large React/Redux/Node codebase shared by 20+ contributing teams and serving 11M+ weekly visitors.",
+      "metrics": {
+        "teamSize": 4,
+        "contributingTeams": "20+",
+        "weeklyVisitors": "11M+",
+        "tenureYears": 8
+      },
+      "highlights": [
+        "Lead a four-developer platform team that owns architecture, performance, and code quality for Kroger's e-commerce web application.",
+        "Founded and lead the architecture board: author and review ADRs that set technical direction for the codebase.",
+        "Lead the standards board defining code-quality and testing standards adopted by all 20+ contributing teams.",
+        "Partner with QA to improve testing practices; built shared testing infrastructure including MSW and server-side mocking for Playwright UI tests.",
+        "Ship full-stack features end-to-end in a large legacy codebase, modernizing incrementally while keeping production stable.",
+        "Drive adoption of standards through pairing, documentation, and cross-team facilitation rather than mandate.",
+        "Practice AI-native development daily with Claude Code; currently leading an AI-accelerated migration of the legacy React Router v5 app and home-built SSR server to React Router 7 framework mode.",
+        "Moved from contributor to tech lead in the first year; twice moved to lead a new team, each time leaving behind a teammate prepared to step into the tech lead role."
+      ],
+      "skills": [
+        { "skillId": "react", "usage": "Primary UI library for the e-commerce application. Eight years of feature work, performance tuning, and architectural stewardship in a very large React codebase." },
+        { "skillId": "redux", "usage": "Application state management across a codebase touched by 20+ teams; set and reviewed patterns for how teams use it." },
+        { "skillId": "react-router", "usage": "Maintained a legacy React Router v5 app with a home-built, partially config-based routing layer, and is now leading its migration directly to React Router 7 framework mode, skipping the compat package and v6 entirely." },
+        { "skillId": "ssr", "usage": "Owns a home-built server-side rendering server for the site and is migrating it to React Router 7 framework mode SSR." },
+        { "skillId": "node", "usage": "Back-end services and the SSR server behind the e-commerce front-end; full-stack feature work end-to-end." },
+        { "skillId": "rest-api-design", "usage": "Designs and consumes the HTTP APIs between the React front-end and Node services for full-stack features." },
+        { "skillId": "ux", "usage": "Brings user empathy and UX knowledge to platform decisions and feature work: prototyping, user testing, and attention to the details of the shopping experience." },
+        { "skillId": "koa", "usage": "Node framework for services in the platform.", "verify": true },
+        { "skillId": "express", "usage": "Node framework for services and SSR in the platform.", "verify": true },
+        { "skillId": "typescript", "usage": "Language for current platform and migration work.", "verify": true },
+        { "skillId": "performance", "usage": "Platform team ownership of front-end and SSR performance for a site serving 11M+ weekly visitors." },
+        { "skillId": "architecture", "usage": "Founded and leads the architecture board; writes and reviews ADRs that set technical direction for the whole codebase." },
+        { "skillId": "code-quality", "usage": "Leads the standards board that defines code-quality standards adopted by all contributing teams; drives adoption through pairing, documentation, and facilitation." },
+        { "skillId": "testing-standards", "usage": "Defines testing standards for the codebase and partners directly with QA to raise testing practices across 20+ teams." },
+        { "skillId": "playwright", "usage": "UI test runner for the platform; built the shared infrastructure other teams' Playwright suites depend on." },
+        { "skillId": "msw", "usage": "Built MSW-based server-side mocking so Playwright UI tests run against deterministic API responses." },
+        { "skillId": "legacy-modernization", "usage": "Eight years of incremental modernization in a large legacy codebase, always with production stability as the constraint. The React Router migration is the current chapter." },
+        { "skillId": "ai-native-development", "usage": "Uses Claude Code daily. On the React Router migration, AI exploration surfaced a path that skips two intermediate versions and a large amount of throwaway code; AI now accelerates the implementation, and the workflow evolves with every prompt." },
+        { "skillId": "technical-leadership", "usage": "Tech lead from the first year; leads a four-developer platform team and sets direction for 20+ contributing teams without formal authority over them." },
+        { "skillId": "mentoring", "usage": "Spent tech-lead time preparing teammates to lead. Twice moved to a new team and left behind an engineer who stepped into the tech lead role." },
+        { "skillId": "cross-team-collaboration", "usage": "Facilitates communication and standards across 20+ teams contributing to one codebase; partners with QA, product, and design as peers." }
+      ],
+      "stories": ["react-router-migration", "tech-lead-succession"]
+    },
+    {
+      "id": "expo",
+      "title": "Full-Stack Web Developer",
+      "org": "Expo",
+      "orgUrl": "https://expo.dev",
+      "location": "Palo Alto, CA",
+      "remote": false,
+      "type": "full-time",
+      "start": "2017-07",
+      "end": "2017-11",
+      "current": false,
+      "featured": true,
+      "summary": "Worked on the Expo platform and contributed to the React Native open-source ecosystem.",
+      "highlights": [
+        "Open-source contributor to Expo and React Native libraries, including merged PRs to react-navigation.",
+        "Built developer tooling and product features across Electron, React Native, and Node."
+      ],
+      "skills": [
+        { "skillId": "open-source", "usage": "Contributed to Expo and React Native libraries in the open, with merged PRs to react-navigation." },
+        { "skillId": "react-navigation", "usage": "Merged contributions to one of the most widely used React Native navigation libraries." },
+        { "skillId": "react-native", "usage": "Worked on the platform side of React Native development rather than a single app, building features and tooling used by other developers." },
+        { "skillId": "expo", "usage": "Built product features and developer tooling for the Expo platform itself." },
+        { "skillId": "electron", "usage": "Desktop developer tooling built with Electron." },
+        { "skillId": "node", "usage": "Back-end and tooling work in Node." },
+        { "skillId": "javascript", "usage": "Front-end and back-end JavaScript across Electron, React Native, and Node." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "book-of-mormon-central",
+      "title": "React Native Developer",
+      "org": "Book of Mormon Central",
+      "orgUrl": null,
+      "location": "Springville, UT",
+      "remote": false,
+      "type": "full-time",
+      "start": "2016-04",
+      "end": "2017-06",
+      "current": false,
+      "featured": true,
+      "summary": "Shipped a cross-platform mobile app with React Native, including Spanish localization.",
+      "highlights": [
+        "Shipped a cross-platform mobile app with React Native and MobX, with Spanish internationalization."
+      ],
+      "skills": [
+        { "skillId": "react-native", "usage": "First production React Native app: built and shipped a cross-platform mobile app for iOS and Android." },
+        { "skillId": "mobx", "usage": "Application state management for the mobile app." },
+        { "skillId": "i18n", "usage": "Shipped Spanish localization for the app." },
+        { "skillId": "realm", "usage": "On-device database for offline content." },
+        { "skillId": "firebase", "usage": "Backend services for the app." },
+        { "skillId": "react", "usage": "React component model applied to mobile." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "koohoots",
+      "title": "Technical Cofounder & Lead Engineer",
+      "org": "Koohoots",
+      "orgUrl": null,
+      "location": "Provo, UT",
+      "remote": false,
+      "type": "founder",
+      "start": "2015-11",
+      "end": "2016-04",
+      "current": false,
+      "featured": true,
+      "summary": "Cofounded an early-stage startup and built the first product from scratch; the startup wound down before launch.",
+      "highlights": [
+        "Built the first product from scratch with Node, Meteor 1.3, MongoDB, React, and ES2015.",
+        "Owned every technical decision as the sole engineer: architecture, stack, and delivery."
+      ],
+      "outcome": "Wound down before launch.",
+      "skills": [
+        { "skillId": "technical-leadership", "usage": "Sole engineer and technical cofounder; owned the architecture, the stack, and the roadmap for a greenfield product." },
+        { "skillId": "react", "usage": "Built the product's front-end in React while it was still early in mainstream adoption." },
+        { "skillId": "node", "usage": "Server-side runtime for the Meteor-based product." },
+        { "skillId": "meteor", "usage": "Full-stack framework (v1.3) for rapid product development." },
+        { "skillId": "mongodb", "usage": "Primary database for the Meteor application." },
+        { "skillId": "javascript", "usage": "Adopted ES2015 early for the whole codebase." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "familysearch",
+      "title": "Front-end Web Developer (Internship)",
+      "org": "FamilySearch",
+      "orgUrl": "https://www.familysearch.org",
+      "location": "Orem, UT",
+      "remote": false,
+      "type": "internship",
+      "start": "2015-04",
+      "end": "2015-10",
+      "current": false,
+      "featured": false,
+      "summary": "Front-end development on the search feature of the main FamilySearch website.",
+      "highlights": [
+        "Built search features for FamilySearch.org with AngularJS 1.x."
+      ],
+      "skills": [
+        { "skillId": "angularjs", "usage": "Front-end development on the site's search feature with AngularJS 1.x." },
+        { "skillId": "javascript", "usage": "First professional JavaScript role on a large, high-traffic public website." },
+        { "skillId": "css", "usage": "UI work on the search experience." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "student-web-dev",
+      "title": "Student Web Developer",
+      "org": null,
+      "orgUrl": null,
+      "location": "Provo, UT",
+      "remote": false,
+      "type": "part-time",
+      "start": "2011",
+      "end": "2015",
+      "current": false,
+      "featured": false,
+      "verify": true,
+      "summary": "Four years of student web development work in jQuery and the LAMP stack while attending BYU.",
+      "highlights": [
+        "Built and maintained web applications with jQuery and the LAMP stack."
+      ],
+      "skills": [
+        { "skillId": "jquery", "usage": "Front-end interactivity for web applications, 2011–2015." },
+        { "skillId": "lamp", "usage": "Server-side development on Linux, Apache, MySQL, and PHP." },
+        { "skillId": "javascript", "usage": "Where the JavaScript career started." },
+        { "skillId": "css", "usage": "Hand-written HTML and CSS for production sites." }
+      ],
+      "stories": []
+    }
+  ],
+
+  "projects": [
+    {
+      "id": "budgeting-app",
+      "name": "Budgeting App",
+      "tagline": "Full-stack web + mobile budgeting app, designed and built end-to-end, largely with AI-native development.",
+      "type": "personal",
+      "status": "active",
+      "start": "2025",
+      "end": null,
+      "current": true,
+      "featured": true,
+      "links": {
+        "repo": null,
+        "live": null
+      },
+      "summary": "A greenfield, solo, full-stack budgeting app with a server-rendered web client on React Router 7 framework mode, a React Native + Expo mobile client, a SQL data layer via Prisma ORM, and a shadcn/ui + Tailwind interface. Infrastructure runs on Cloudflare, using DNS, Email Workers, and Tunnels to enable remote development. Built largely with Claude Code.",
+      "highlights": [
+        "Web client: React Router 7 framework mode with SSR.",
+        "Mobile client: React Native + Expo.",
+        "Data: SQL via Prisma ORM.",
+        "UI: shadcn/ui + Tailwind.",
+        "Infrastructure: Cloudflare DNS, Email Workers, and Tunnels for remote development.",
+        "Built largely with AI-native development; the commit history shows the workflow."
+      ],
+      "skills": [
+        { "skillId": "react-router", "usage": "Server-rendered web client on React Router 7 framework mode (the Remix lineage), the same target as the migration at Kroger." },
+        { "skillId": "ssr", "usage": "Framework-mode SSR for the web client." },
+        { "skillId": "react-native", "usage": "Mobile client sharing the app's data layer." },
+        { "skillId": "expo", "usage": "Toolchain and runtime for the mobile client." },
+        { "skillId": "prisma", "usage": "Schema, migrations, and typed queries for the SQL data layer." },
+        { "skillId": "sql", "usage": "Relational data model for accounts, transactions, and budgets." },
+        { "skillId": "shadcn-ui", "usage": "Component foundation for the web interface." },
+        { "skillId": "tailwind", "usage": "Styling for the web interface." },
+        { "skillId": "cloudflare", "usage": "DNS, Email Workers, and Tunnels; Tunnels expose the dev environment securely for remote development." },
+        { "skillId": "ai-native-development", "usage": "Built largely with Claude Code from the first commit: specs, implementation, review, and tests." },
+        { "skillId": "typescript", "usage": "Language across web, mobile, and data layers." }
+      ],
+      "stories": []
+    }
+  ],
+
+  "openSource": [
+    {
+      "id": "react-navigation",
+      "name": "react-navigation",
+      "url": "https://github.com/react-navigation/react-navigation",
+      "role": "contributor",
+      "period": "2017",
+      "summary": "Merged PRs while working at Expo.",
+      "links": { "prs": null }
+    },
+    {
+      "id": "expo-libraries",
+      "name": "Expo and React Native libraries",
+      "url": "https://github.com/expo",
+      "role": "contributor",
+      "period": "2017",
+      "summary": "Contributions to Expo and React Native ecosystem libraries.",
+      "links": { "prs": null }
+    }
+  ],
+
+  "education": [
+    {
+      "id": "byu",
+      "institution": "Brigham Young University",
+      "location": "Provo, UT",
+      "program": "Coursework toward a B.S. in Information Technology",
+      "degree": null,
+      "completed": false,
+      "start": null,
+      "end": null,
+      "showDates": false,
+      "summary": "Attended for several years, most recently majoring in Information Technology, while working as a student web developer."
+    }
+  ],
+
+  "stories": [
+    {
+      "id": "react-router-migration",
+      "title": "Skipping two major versions: the React Router migration",
+      "experienceId": "kroger",
+      "skills": ["react-router", "ssr", "ai-native-development", "legacy-modernization", "architecture"],
+      "context": "Kroger's e-commerce app was on React Router v5 with a home-grown, partially config-based routing system and a home-built SSR server. I'm leading the migration to React Router 7 framework mode.",
+      "problem": "The conventional path is v5, then the v5-to-v6 compat package, then v6, then v7. Working through that path with Claude, I found it was full of blockers and throwaway migration code because of how unusual our legacy routing system was.",
+      "action": "I paused to explore the codebase more deeply, and with Claude's help discovered that because our routing was already partially config-based, we could rework it to be fully config-based and match the React Router 7 API while still on v5.",
+      "result": "That lets us skip the compat package and v6 entirely, unblocking the migration and saving a significant amount of throwaway code. I've since used AI daily to implement the migration, and my workflow evolves every time I enter a prompt.",
+      "takeaway": "This is what I think AI-native engineering is for: not only generating code faster, but exploring and validating a better path than the one you walked in with."
+    },
+    {
+      "id": "tech-lead-succession",
+      "title": "Leaving behind a tech lead",
+      "experienceId": "kroger",
+      "skills": ["mentoring", "technical-leadership", "cross-team-collaboration"],
+      "context": "I joined Kroger as a team contributor and became tech lead in my first year.",
+      "problem": "A tech lead who is the only person who can lead is a bottleneck, and a team that can't survive its lead leaving isn't healthy.",
+      "action": "As tech lead I spent a lot of time pairing with teammates and preparing them to lead: sharing context, handing over responsibility a little before they felt ready, and trusting them with it.",
+      "result": "I moved to lead other teams twice, and both times left behind an engineer who was prepared to step into the tech lead role of the team I was leaving.",
+      "takeaway": "I love pairing and learning in both directions. Trusting people with responsibility before they think they're ready is how they become ready."
+    }
+  ],
+
+  "principles": [
+    {
+      "id": "influence-without-authority",
+      "title": "Influence through collaboration",
+      "blurb": "Architecture boards, standards boards, ADRs, and pairing beat mandates. Standards that people helped write are standards people follow."
+    },
+    {
+      "id": "legacy-empathy",
+      "title": "Modernize without breaking production",
+      "blurb": "Large legacy systems exist because they worked. Improve them incrementally, keep them stable, and respect the teams that maintain them."
+    },
+    {
+      "id": "leave-it-better",
+      "title": "Leave teams better than you found them",
+      "blurb": "The measure of leading a team is what happens after you step back. Prepare the next lead while you're still there."
+    },
+    {
+      "id": "ai-as-explorer",
+      "title": "AI as a thinking partner, not just a typist",
+      "blurb": "The biggest wins from AI-native development have come from exploring and validating better paths, not from typing faster."
+    },
+    {
+      "id": "user-empathy",
+      "title": "Empathy for the user",
+      "blurb": "Talk to users, prototype, test, and sweat the details that make an interface feel right."
+    }
+  ]
+}

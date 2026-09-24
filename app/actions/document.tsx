@@ -10,7 +10,7 @@ export interface DocumentProps {
 
 const DEFAULT_TITLE = "Dave Pack";
 const DEFAULT_DESCRIPTION =
-  "Dave Pack — full-stack engineer and web platform lead in Arvada, Colorado.";
+  "Dave Pack, full-stack engineer and web platform lead in Arvada, Colorado.";
 
 export function Document(handle: Handle<DocumentProps>) {
   return () => {

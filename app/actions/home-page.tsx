@@ -1,7 +1,11 @@
-import type { Handle, RemixNode } from "remix/ui";
 import { css } from "remix/ui";
+import { spring } from "remix/ui/animation";
 
 import { Document } from "./document.tsx";
+import { RidgeDivider, Squiggle } from "./home-flourishes.tsx";
+import { DARK, MOTION_OK, TextLink } from "./home-primitives.tsx";
+import { SkillStickers } from "./home-skills.tsx";
+import { WorkTimeline } from "./home-work.tsx";
 
 // Everything on the page is driven by this object.
 const content = {
@@ -21,6 +25,10 @@ const content = {
 const FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
+// Faint grey paper grain, tiled. Desaturated so it never tints the page.
+const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
 export function HomePage() {
   return () => (
     <Document>
@@ -32,15 +40,29 @@ export function HomePage() {
           "--ink": "#1c1b1a",
           "--muted": "#6f6b66",
           "--accent": "#b3541e",
+          "--accent-soft": "rgba(179, 84, 30, 0.18)",
+          "--tint": "rgba(179, 84, 30, 0.07)",
           "--rule": "#e5e1db",
-          "@media (prefers-color-scheme: dark)": {
+          "--card": "#ffffff",
+          "--shadow": "rgba(28, 27, 26, 0.08)",
+          "--glow": "rgba(179, 84, 30, 0.10)",
+          "--grain-opacity": "0.05",
+          [DARK]: {
             "--bg": "#131211",
             "--ink": "#e7e4e0",
             "--muted": "#97918a",
             "--accent": "#e08e57",
+            "--accent-soft": "rgba(224, 142, 87, 0.22)",
+            "--tint": "rgba(224, 142, 87, 0.10)",
             "--rule": "#2c2a27",
+            "--card": "#1c1b19",
+            "--shadow": "rgba(0, 0, 0, 0.4)",
+            "--glow": "rgba(224, 142, 87, 0.12)",
+            "--grain-opacity": "0.06",
           },
           "& *, & *::before, & *::after": { boxSizing: "border-box" },
+          position: "relative",
+          isolation: "isolate",
           minHeight: "100vh",
           margin: 0,
           padding: "0 24px",
@@ -53,6 +75,25 @@ export function HomePage() {
           MozOsxFontSmoothing: "grayscale",
           display: "flex",
           justifyContent: "center",
+          // Paper: a grain layer and a warm glow behind the header, both fixed
+          // and behind the content but above the page background.
+          "&::before, &::after": {
+            content: '""',
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: -1,
+          },
+          "&::before": {
+            backgroundImage: GRAIN,
+            backgroundSize: "160px 160px",
+            opacity: "var(--grain-opacity)",
+          },
+          "&::after": {
+            background: "radial-gradient(60rem 28rem at 50% -8rem, var(--glow), transparent 70%)",
+          },
+          "& ::selection": { background: "var(--accent)", color: "var(--bg)" },
+          "& :focus-visible": { outline: "2px solid var(--accent)", outlineOffset: "3px" },
         })}
       >
         <div
@@ -64,11 +105,26 @@ export function HomePage() {
             flexDirection: "column",
             gap: "3rem",
             "@media (max-width: 600px)": { padding: "14vh 0 10vh" },
+            // Sections rise in one after another on load.
+            [MOTION_OK]: {
+              "& > *": { animation: "dp-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both" },
+              "& > :nth-child(2)": { animationDelay: "80ms" },
+              "& > :nth-child(3)": { animationDelay: "160ms" },
+              "& > :nth-child(4)": { animationDelay: "240ms" },
+              "& > :nth-child(5)": { animationDelay: "320ms" },
+              "& > :nth-child(6)": { animationDelay: "400ms" },
+            },
+            "@keyframes dp-rise": {
+              from: { opacity: 0, transform: "translateY(10px)" },
+              to: { opacity: 1, transform: "none" },
+            },
           })}
         >
           <Header />
           <Bio />
           <Links />
+          <WorkTimeline />
+          <SkillStickers />
           <Footer />
         </div>
       </main>
@@ -92,6 +148,13 @@ function Header() {
           objectFit: "cover",
           border: "1px solid var(--rule)",
           marginBottom: "1.25rem",
+          // Tips its cap when you hover.
+          transformOrigin: "50% 80%",
+          [MOTION_OK]: {
+            transition: spring.transition("transform", "bouncy"),
+            "&:hover": { transform: "rotate(-7deg) translateY(-3px) scale(1.04)" },
+            "&:active": { transform: "rotate(-4deg) scale(0.96)" },
+          },
         })}
       />
       <h1
@@ -103,7 +166,18 @@ function Header() {
           lineHeight: 1.2,
         })}
       >
-        {content.name}
+        <span
+          mix={css({
+            // The squiggle is absolutely positioned so its 400-unit viewBox
+            // never widens the name (or the page on small screens).
+            position: "relative",
+            display: "inline-block",
+            paddingBottom: "0.7rem",
+          })}
+        >
+          {content.name}
+          <Squiggle />
+        </span>
       </h1>
       <p
         mix={css({
@@ -162,40 +236,17 @@ function Footer() {
   return () => (
     <footer
       mix={css({
-        borderTop: "1px solid var(--rule)",
-        paddingTop: "1.5rem",
         fontSize: "0.875rem",
         color: "var(--muted)",
+        "& p": { margin: 0 },
       })}
     >
-      <p mix={css({ margin: 0 })}>
+      <RidgeDivider />
+      <p>
         &copy; {new Date().getFullYear()} Dave Pack &middot;{" "}
         <TextLink href="https://v1.davepack.dev">v1 of this site</TextLink>
       </p>
+      <p>Made about a mile above sea level.</p>
     </footer>
   );
-}
-
-function TextLink(handle: Handle<{ href: string; children: RemixNode }>) {
-  return () => {
-    let { href, children } = handle.props;
-
-    return (
-      <a
-        href={href}
-        mix={css({
-          color: "var(--accent)",
-          textDecoration: "none",
-          borderBottom: "1px solid transparent",
-          transition: "border-color 120ms ease",
-          "&:hover, &:focus-visible": {
-            borderBottomColor: "var(--accent)",
-            outline: "none",
-          },
-        })}
-      >
-        {children}
-      </a>
-    );
-  };
 }

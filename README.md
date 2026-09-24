@@ -9,6 +9,7 @@ A minimal Remix application starter with a home page.
 - `app/routes.ts` defines the shared route contract used for type-safe hrefs.
 - `app/router.ts` wires routes to handlers.
 - `app/middleware/render.tsx` installs the request-scoped renderer used by actions.
+- `app/data/resume.ts` reads `data/davepack-resume.json` and exposes only publishable fields (no contact details, nothing marked `verify: true`).
 - Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets.
 
 The app is server-rendered only and runs on Cloudflare Workers; there is no client entry or asset server.
