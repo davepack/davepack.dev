@@ -1,6 +1,5 @@
-import type { Handle } from "remix/ui";
-import { css } from "remix/ui";
-import { spring } from "remix/ui/animation";
+import type { Handle } from "remix/component";
+import { css } from "remix/component";
 
 import { Document } from "./document.tsx";
 import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
@@ -24,6 +23,9 @@ const content = {
     { label: "LinkedIn", href: "https://www.linkedin.com/in/dpack" },
   ],
 };
+
+// A springy overshoot for the avatar's hover tilt.
+const SPRING_BOUNCY = "450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
 
 const FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
@@ -183,7 +185,7 @@ function Header() {
           // Tips its cap when you hover.
           transformOrigin: "50% 80%",
           [MOTION_OK]: {
-            transition: spring.transition("transform", "bouncy"),
+            transition: `transform ${SPRING_BOUNCY}`,
             "&:hover": { transform: "rotate(-7deg) translateY(-3px) scale(1.04)" },
             "&:active": { transform: "rotate(-4deg) scale(0.96)" },
           },

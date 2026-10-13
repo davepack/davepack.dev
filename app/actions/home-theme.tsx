@@ -4,8 +4,8 @@
 // the choice in a cookie, and the server reads that cookie to check the
 // right radio on the next visit, so there is no flash.
 
-import type { Handle } from "remix/ui";
-import { css } from "remix/ui";
+import type { Handle } from "remix/component";
+import { css } from "remix/component";
 
 import { PIXEL_FONT, bevelRules } from "./home-primitives.tsx";
 

@@ -2,7 +2,7 @@
 // name and a snowcapped range above the footer. Both are inline SVG styled
 // from CSS so they follow the light and dark tokens.
 
-import { css } from "remix/ui";
+import { css } from "remix/component";
 
 import { MOTION_OK } from "./home-primitives.tsx";
 

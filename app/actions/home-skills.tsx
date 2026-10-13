@@ -2,8 +2,7 @@
 // retro push button that stays pressed while open. Opening one reveals its caption in a shared panel under the cloud;
 // the `name` attribute keeps only one open at a time in current browsers.
 
-import { css } from "remix/ui";
-import { spring } from "remix/ui/animation";
+import { css } from "remix/component";
 
 import { formatStat, skillGroups } from "../data/resume.ts";
 import {
@@ -79,7 +78,7 @@ export function SkillStickers() {
         "& .stickers:has(details[open]) .hint": { opacity: 0 },
         [MOTION_OK]: {
           "& summary": {
-            transition: spring.transition(["translate"], "snappy"),
+            transition: "translate 160ms cubic-bezier(0.2, 0.8, 0.2, 1)",
           },
           "& .hint": { transition: "opacity 160ms ease" },
           "& details[open] > .cap": { animation: "dp-reveal 260ms ease-out" },

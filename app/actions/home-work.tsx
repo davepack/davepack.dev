@@ -1,8 +1,8 @@
 // Work timeline: one native <details> per role, newest first, with side
 // projects at the end. Everything comes from app/data/resume.ts.
 
-import type { Handle } from "remix/ui";
-import { css } from "remix/ui";
+import type { Handle } from "remix/component";
+import { css } from "remix/component";
 
 import {
   formatRange,

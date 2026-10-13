@@ -2,7 +2,7 @@
 // HUD, and the controls (hidden until the script is running); public/ski.js
 // does the rest. Without JavaScript the page is simply snow-colored.
 
-import { css } from "remix/ui";
+import { css } from "remix/component";
 
 import { PIXEL_FONT, bevelRules, windowRules } from "./home-primitives.tsx";
 

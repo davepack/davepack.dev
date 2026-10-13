@@ -1,7 +1,7 @@
 // Small pieces shared by the home page's route-owned modules.
 
-import type { Handle, RemixNode } from "remix/ui";
-import { css } from "remix/ui";
+import type { Handle, RemixNode } from "remix/component";
+import { css } from "remix/component";
 
 // Wrap every transition and animation in this so reduced-motion users get a
 // static page.
