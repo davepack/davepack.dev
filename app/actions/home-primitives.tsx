@@ -8,6 +8,34 @@ import { css } from "remix/ui";
 export const MOTION_OK = "@media (prefers-reduced-motion: no-preference)";
 export const DARK = "@media (prefers-color-scheme: dark)";
 
+// Chunky pixel face for the name, title bars, buttons, and the game HUD.
+// Body copy stays in the system stack so it reads easily.
+export const PIXEL_FONT = "'Pixelify Sans', ui-monospace, 'SFMono-Regular', Menlo, monospace";
+
+// A retro desktop window: hard outline, offset shadow, and just enough
+// translucency to hint at the slope without hurting the text.
+export const windowRules = {
+  "--pad": "1.5rem",
+  position: "relative",
+  background: "color-mix(in srgb, var(--card) 97%, transparent)",
+  border: "2px solid var(--frame)",
+  boxShadow: "5px 5px 0 var(--frame)",
+  padding: "0 var(--pad) var(--pad)",
+  "@media (max-width: 600px)": { "--pad": "1rem", boxShadow: "4px 4px 0 var(--frame)" },
+} as const;
+
+// Raised and pressed bevels for buttons drawn in the same style.
+export const bevelRules = {
+  raised: {
+    background: "var(--chrome)",
+    border: "2px solid var(--frame)",
+    boxShadow: "inset -2px -2px 0 var(--bevel-dark), inset 2px 2px 0 var(--bevel-light)",
+  },
+  pressed: {
+    boxShadow: "inset 2px 2px 0 var(--bevel-dark), inset -2px -2px 0 var(--bevel-light)",
+  },
+} as const;
+
 // Accent text with a thin underline that sweeps up into a marker highlight on
 // hover or focus.
 export function TextLink(handle: Handle<{ href: string; children: RemixNode }>) {
@@ -23,7 +51,6 @@ export function TextLink(handle: Handle<{ href: string; children: RemixNode }>) 
         backgroundPosition: "0 100%",
         padding: "0 0.1em",
         margin: "0 -0.1em",
-        borderRadius: "3px",
         "&:hover, &:focus-visible": { backgroundSize: "100% 45%" },
         [MOTION_OK]: { transition: "background-size 200ms ease" },
       })}
@@ -33,15 +60,14 @@ export function TextLink(handle: Handle<{ href: string; children: RemixNode }>) 
   );
 }
 
-// Quiet pill for skill names and small labels.
+// Quiet square tag for skill names and small labels.
 export function Chip(handle: Handle<{ children: RemixNode }>) {
   return () => (
     <span
       mix={css({
         display: "inline-block",
-        padding: "0.05rem 0.6rem",
-        border: "1px solid var(--rule)",
-        borderRadius: "999px",
+        padding: "0 0.5rem",
+        border: "2px solid var(--rule)",
         fontSize: "0.8125rem",
         lineHeight: 1.6,
         color: "var(--muted)",
@@ -53,42 +79,91 @@ export function Chip(handle: Handle<{ children: RemixNode }>) {
   );
 }
 
-// Small-caps section label used by the Work and Skills sections.
+// The title bar across the top of a window: a control box on the left, the
+// title in the middle, and minimize/maximize boxes on the right. Without a
+// title it is purely decorative.
+export function TitleBar(handle: Handle<{ id?: string; children?: RemixNode }>) {
+  return () => {
+    let { id, children } = handle.props;
+    return (
+      <div
+        aria-hidden={children ? undefined : "true"}
+        mix={css({
+          display: "flex",
+          alignItems: "stretch",
+          height: "1.875rem",
+          margin: "0 calc(var(--pad) * -1) var(--pad)",
+          background: "var(--title)",
+          color: "var(--title-ink)",
+          borderBottom: "2px solid var(--frame)",
+          "& .box": {
+            flex: "none",
+            width: "1.875rem",
+            background: "var(--chrome)",
+            boxShadow: "inset -2px -2px 0 var(--bevel-dark), inset 2px 2px 0 var(--bevel-light)",
+            display: "grid",
+            placeItems: "center",
+          },
+          "& .menu": { borderRight: "2px solid var(--frame)" },
+          "& .menu::before": {
+            content: '""',
+            width: "0.75rem",
+            height: "0.1875rem",
+            background: "var(--ink-on-chrome)",
+            boxShadow: "1px 1px 0 var(--bevel-light)",
+          },
+          "& .min, & .max": { borderLeft: "2px solid var(--frame)" },
+          "& .min::before, & .max::before": {
+            content: '""',
+            borderLeft: "0.3rem solid transparent",
+            borderRight: "0.3rem solid transparent",
+          },
+          "& .min::before": { borderTop: "0.3rem solid var(--ink-on-chrome)" },
+          "& .max::before": { borderBottom: "0.3rem solid var(--ink-on-chrome)" },
+          "& h2": {
+            flex: 1,
+            margin: 0,
+            alignSelf: "center",
+            textAlign: "center",
+            fontFamily: PIXEL_FONT,
+            fontSize: "0.9375rem",
+            fontWeight: 600,
+            letterSpacing: "0.04em",
+            lineHeight: 1,
+          },
+          "& .spacer": { flex: 1 },
+        })}
+      >
+        <span className="box menu" aria-hidden="true" />
+        {children ? <h2 id={id}>{children}</h2> : <span className="spacer" />}
+        <span className="box min" aria-hidden="true" />
+        <span className="box max" aria-hidden="true" />
+      </div>
+    );
+  };
+}
+
+// Section label used by the Work and Skills windows.
 export function SectionHeading(handle: Handle<{ id: string; children: RemixNode }>) {
-  return () => (
-    <h2
-      id={handle.props.id}
-      mix={css({
-        margin: "0 0 1rem",
-        fontSize: "0.8125rem",
-        fontWeight: 600,
-        letterSpacing: "0.12em",
-        textTransform: "uppercase",
-        color: "var(--muted)",
-      })}
-    >
-      {handle.props.children}
-    </h2>
-  );
+  return () => <TitleBar id={handle.props.id}>{handle.props.children}</TitleBar>;
 }
 
 // Rules shared by every <details> on the page: hide the native marker and draw
-// a small chevron that turns when the disclosure opens.
+// a small pixel arrow that turns when the disclosure opens.
 export const chevronRules = {
   "& > summary::-webkit-details-marker": { display: "none" },
   "& > summary::before": {
     content: '""',
     flex: "none",
     alignSelf: "center",
-    width: "0.45em",
-    height: "0.45em",
-    marginRight: "0.35rem",
-    borderRight: "1.5px solid var(--accent)",
-    borderBottom: "1.5px solid var(--accent)",
-    rotate: "-45deg",
-    translate: "0 -0.1em",
+    width: 0,
+    height: 0,
+    marginRight: "0.4rem",
+    borderTop: "0.3rem solid transparent",
+    borderBottom: "0.3rem solid transparent",
+    borderLeft: "0.4rem solid var(--hot)",
   },
-  "&[open] > summary::before": { rotate: "45deg", translate: "0 -0.2em" },
+  "&[open] > summary::before": { rotate: "90deg" },
 } as const;
 
 // Progressive open/close height animation for <details>. Browsers without

@@ -18,13 +18,14 @@ import {
   TextLink,
   chevronRules,
   detailsHeightRules,
+  windowRules,
 } from "./home-primitives.tsx";
 
 export function WorkTimeline() {
   let entries = timeline();
 
   return () => (
-    <section aria-labelledby="work-heading">
+    <section aria-labelledby="work-heading" mix={css(windowRules)}>
       <SectionHeading id="work-heading">Work</SectionHeading>
       <ol
         mix={css({
@@ -77,7 +78,6 @@ function Entry(handle: Handle<{ entry: TimelineEntry }>) {
             gap: "0.25rem 0.6rem",
             padding: "0.55rem 0.75rem",
             margin: "0 -0.75rem",
-            borderRadius: "8px",
           },
           "& > summary:hover": { background: "var(--tint)" },
           "& h3": { margin: 0, fontSize: "1rem", fontWeight: 600 },
@@ -103,7 +103,7 @@ function Entry(handle: Handle<{ entry: TimelineEntry }>) {
           },
           "& .more": { fontSize: "0.9375rem" },
           [MOTION_OK]: {
-            "& > summary::before": { transition: "rotate 200ms ease, translate 200ms ease" },
+            "& > summary::before": { transition: "rotate 200ms steps(3)" },
             "&[open] > .body": { animation: "dp-reveal 260ms ease-out" },
           },
           "@keyframes dp-reveal": {
@@ -160,7 +160,7 @@ function StoryDetails(handle: Handle<{ story: Story }>) {
           ...chevronRules,
           ...detailsHeightRules,
           marginTop: "0.5rem",
-          borderLeft: "2px solid var(--rule)",
+          borderLeft: "2px dashed var(--rule)",
           paddingLeft: "0.75rem",
           fontSize: "0.9375rem",
           "& > summary": {
@@ -174,7 +174,7 @@ function StoryDetails(handle: Handle<{ story: Story }>) {
           "& > .body > p": { margin: "0.5rem 0 0" },
           "& .takeaway": { color: "var(--muted)" },
           [MOTION_OK]: {
-            "& > summary::before": { transition: "rotate 200ms ease, translate 200ms ease" },
+            "& > summary::before": { transition: "rotate 200ms steps(3)" },
             "&[open] > .body": { animation: "dp-reveal 260ms ease-out" },
           },
         })}

@@ -2,8 +2,16 @@ import { css } from "remix/ui";
 import { spring } from "remix/ui/animation";
 
 import { Document } from "./document.tsx";
-import { RidgeDivider, Squiggle } from "./home-flourishes.tsx";
-import { DARK, MOTION_OK, TextLink } from "./home-primitives.tsx";
+import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
+import {
+  DARK,
+  MOTION_OK,
+  PIXEL_FONT,
+  TextLink,
+  TitleBar,
+  windowRules,
+} from "./home-primitives.tsx";
+import { SkiSlope, skiRootRules } from "./home-ski.tsx";
 import { SkillStickers } from "./home-skills.tsx";
 import { WorkTimeline } from "./home-work.tsx";
 
@@ -25,41 +33,69 @@ const content = {
 const FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
-// Faint grey paper grain, tiled. Desaturated so it never tints the page.
-const GRAIN =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+const FONT_HREF =
+  "https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap";
+
+const fontLinks = (
+  <>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+    <link rel="stylesheet" href={FONT_HREF} />
+  </>
+);
 
 export function HomePage() {
   return () => (
-    <Document>
+    <Document head={fontLinks}>
       <main
+        data-ski-root
         mix={css({
-          // Light-mode tokens (default): warm paper, near-black ink,
-          // terracotta accent.
-          "--bg": "#fbfaf8",
-          "--ink": "#1c1b1a",
-          "--muted": "#6f6b66",
-          "--accent": "#b3541e",
-          "--accent-soft": "rgba(179, 84, 30, 0.18)",
-          "--tint": "rgba(179, 84, 30, 0.07)",
-          "--rule": "#e5e1db",
+          // Day on the mountain (default): fresh snow, ink outlines, a navy
+          // title bar, and a red ski-jacket accent.
+          "--bg": "#f7fafd",
+          "--ink": "#13161c",
+          "--muted": "#566173",
+          "--accent": "#1f4fd1",
+          "--accent-soft": "rgba(31, 79, 209, 0.18)",
+          "--tint": "rgba(31, 79, 209, 0.07)",
+          "--hot": "#d12b2b",
+          "--rule": "#cdd5e1",
           "--card": "#ffffff",
-          "--shadow": "rgba(28, 27, 26, 0.08)",
-          "--glow": "rgba(179, 84, 30, 0.10)",
-          "--grain-opacity": "0.05",
+          "--frame": "#13161c",
+          "--title": "#1d2f91",
+          "--title-ink": "#ffffff",
+          "--chrome": "#c3cad4",
+          "--chrome-hover": "#d3d9e1",
+          "--ink-on-chrome": "#13161c",
+          "--bevel-light": "#ffffff",
+          "--bevel-dark": "#7d8796",
+          "--mtn": "#c9d3e0",
+          "--mtn-back": "#dfe6ef",
+          "--snowcap": "#ffffff",
+          // Night skiing.
           [DARK]: {
-            "--bg": "#131211",
-            "--ink": "#e7e4e0",
-            "--muted": "#97918a",
-            "--accent": "#e08e57",
-            "--accent-soft": "rgba(224, 142, 87, 0.22)",
-            "--tint": "rgba(224, 142, 87, 0.10)",
-            "--rule": "#2c2a27",
-            "--card": "#1c1b19",
-            "--shadow": "rgba(0, 0, 0, 0.4)",
-            "--glow": "rgba(224, 142, 87, 0.12)",
-            "--grain-opacity": "0.06",
+            "--bg": "#0d1726",
+            "--ink": "#e6edf7",
+            "--muted": "#93a1b8",
+            "--accent": "#8fb0ff",
+            "--accent-soft": "rgba(143, 176, 255, 0.24)",
+            "--tint": "rgba(143, 176, 255, 0.10)",
+            "--hot": "#ff6b5e",
+            "--rule": "#2a3a55",
+            "--card": "#121f33",
+            "--frame": "#6f84a8",
+            "--title": "#2b46c4",
+            "--title-ink": "#ffffff",
+            "--chrome": "#34445f",
+            "--chrome-hover": "#3d4f6d",
+            "--ink-on-chrome": "#e6edf7",
+            "--bevel-light": "#56698a",
+            "--bevel-dark": "#0a111d",
+            "--mtn": "#22324c",
+            "--mtn-back": "#1a2840",
+            "--snowcap": "#c9d6ea",
           },
+          ...skiRootRules,
           "& *, & *::before, & *::after": { boxSizing: "border-box" },
           position: "relative",
           isolation: "isolate",
@@ -75,44 +111,28 @@ export function HomePage() {
           MozOsxFontSmoothing: "grayscale",
           display: "flex",
           justifyContent: "center",
-          // Paper: a grain layer and a warm glow behind the header, both fixed
-          // and behind the content but above the page background.
-          "&::before, &::after": {
-            content: '""',
-            position: "fixed",
-            inset: 0,
-            pointerEvents: "none",
-            zIndex: -1,
-          },
-          "&::before": {
-            backgroundImage: GRAIN,
-            backgroundSize: "160px 160px",
-            opacity: "var(--grain-opacity)",
-          },
-          "&::after": {
-            background: "radial-gradient(60rem 28rem at 50% -8rem, var(--glow), transparent 70%)",
-          },
-          "& ::selection": { background: "var(--accent)", color: "var(--bg)" },
+          "@media (max-width: 600px)": { padding: "0 16px" },
+          "& ::selection": { background: "var(--title)", color: "var(--title-ink)" },
           "& :focus-visible": { outline: "2px solid var(--accent)", outlineOffset: "3px" },
         })}
       >
+        <SkiSlope />
         <div
+          className="page"
           mix={css({
             width: "100%",
-            maxWidth: "38rem",
-            padding: "18vh 0 12vh",
+            maxWidth: "40rem",
+            padding: "14vh 0 16vh",
             display: "flex",
             flexDirection: "column",
-            gap: "3rem",
-            "@media (max-width: 600px)": { padding: "14vh 0 10vh" },
-            // Sections rise in one after another on load.
+            gap: "2.5rem",
+            "@media (max-width: 600px)": { padding: "8vh 0 14vh", gap: "2rem" },
+            // Windows drop in one after another on load.
             [MOTION_OK]: {
               "& > *": { animation: "dp-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both" },
-              "& > :nth-child(2)": { animationDelay: "80ms" },
-              "& > :nth-child(3)": { animationDelay: "160ms" },
-              "& > :nth-child(4)": { animationDelay: "240ms" },
-              "& > :nth-child(5)": { animationDelay: "320ms" },
-              "& > :nth-child(6)": { animationDelay: "400ms" },
+              "& > :nth-child(2)": { animationDelay: "100ms" },
+              "& > :nth-child(3)": { animationDelay: "200ms" },
+              "& > :nth-child(4)": { animationDelay: "300ms" },
             },
             "@keyframes dp-rise": {
               from: { opacity: 0, transform: "translateY(10px)" },
@@ -120,9 +140,14 @@ export function HomePage() {
             },
           })}
         >
-          <Header />
-          <Bio />
-          <Links />
+          <div mix={css({ ...windowRules, display: "flex", flexDirection: "column", gap: "2rem" })}>
+            <div>
+              <TitleBar />
+              <Header />
+            </div>
+            <Bio />
+            <Links />
+          </div>
           <WorkTimeline />
           <SkillStickers />
           <Footer />
@@ -144,9 +169,9 @@ function Header() {
           display: "block",
           width: "88px",
           height: "88px",
-          borderRadius: "50%",
           objectFit: "cover",
-          border: "1px solid var(--rule)",
+          border: "2px solid var(--frame)",
+          boxShadow: "3px 3px 0 var(--frame)",
           marginBottom: "1.25rem",
           // Tips its cap when you hover.
           transformOrigin: "50% 80%",
@@ -160,23 +185,23 @@ function Header() {
       <h1
         mix={css({
           margin: 0,
-          fontSize: "2rem",
+          fontFamily: PIXEL_FONT,
+          fontSize: "2.5rem",
           fontWeight: 600,
-          letterSpacing: "-0.02em",
-          lineHeight: 1.2,
+          lineHeight: 1.1,
         })}
       >
         <span
           mix={css({
-            // The squiggle is absolutely positioned so its 400-unit viewBox
+            // The tracks are absolutely positioned so their 400-unit viewBox
             // never widens the name (or the page on small screens).
             position: "relative",
             display: "inline-block",
-            paddingBottom: "0.7rem",
+            paddingBottom: "0.9rem",
           })}
         >
           {content.name}
-          <Squiggle />
+          <SkiTracks />
         </span>
       </h1>
       <p
@@ -236,12 +261,14 @@ function Footer() {
   return () => (
     <footer
       mix={css({
+        ...windowRules,
+        paddingTop: "var(--pad)",
         fontSize: "0.875rem",
         color: "var(--muted)",
         "& p": { margin: 0 },
       })}
     >
-      <RidgeDivider />
+      <MountainDivider />
       <p>
         &copy; {new Date().getFullYear()} Dave Pack &middot;{" "}
         <TextLink href="https://v1.davepack.dev">v1 of this site</TextLink>

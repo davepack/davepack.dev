@@ -1,12 +1,18 @@
 // Skill stickers: each skill is a native <details> whose summary looks like a
-// sticker. Opening one reveals its caption in a shared panel under the cloud;
+// retro push button that stays pressed while open. Opening one reveals its caption in a shared panel under the cloud;
 // the `name` attribute keeps only one open at a time in current browsers.
 
 import { css } from "remix/ui";
 import { spring } from "remix/ui/animation";
 
 import { formatStat, skillGroups } from "../data/resume.ts";
-import { MOTION_OK, SectionHeading } from "./home-primitives.tsx";
+import {
+  MOTION_OK,
+  PIXEL_FONT,
+  SectionHeading,
+  bevelRules,
+  windowRules,
+} from "./home-primitives.tsx";
 
 const CAPTION_SPACE = "5.5rem";
 
@@ -18,6 +24,7 @@ export function SkillStickers() {
     <section
       aria-labelledby="skills-heading"
       mix={css({
+        ...windowRules,
         "& .stickers": { position: "relative", paddingBottom: CAPTION_SPACE },
         "& .group": { margin: "0 0 1rem" },
         "& .label": {
@@ -37,29 +44,25 @@ export function SkillStickers() {
         },
         "& details": { display: "block" },
         "& summary": {
+          ...bevelRules.raised,
           listStyle: "none",
           cursor: "pointer",
           display: "inline-block",
-          padding: "0.3rem 0.7rem",
-          background: "var(--card)",
-          border: "1px solid var(--rule)",
-          borderRadius: "8px",
-          boxShadow: "0 1px 2px var(--shadow)",
+          padding: "0.3rem 0.75rem",
+          color: "var(--ink-on-chrome)",
+          fontFamily: PIXEL_FONT,
           fontSize: "0.9375rem",
-          lineHeight: 1.4,
+          lineHeight: 1.3,
           userSelect: "none",
         },
         "& summary::-webkit-details-marker": { display: "none" },
-        // A little tilt on every other pair, like stickers pressed on by hand.
-        "& li:nth-child(4n+1) summary": { rotate: "-1.5deg" },
-        "& li:nth-child(4n+3) summary": { rotate: "1deg" },
-        "& summary:hover, & summary:focus-visible, & details[open] > summary": {
-          rotate: "0deg",
-          translate: "0 -2px",
-          borderColor: "var(--accent)",
-          boxShadow: "0 4px 10px var(--shadow)",
+        "& summary:hover, & summary:focus-visible": { background: "var(--chrome-hover)" },
+        "& details[open] > summary": {
+          ...bevelRules.pressed,
+          translate: "1px 1px",
+          background: "var(--title)",
+          color: "var(--title-ink)",
         },
-        "& details[open] > summary": { background: "var(--tint)" },
         // Captions all sit in the same reserved strip below the cloud.
         "& .cap, & .hint": {
           position: "absolute",
@@ -76,7 +79,7 @@ export function SkillStickers() {
         "& .stickers:has(details[open]) .hint": { opacity: 0 },
         [MOTION_OK]: {
           "& summary": {
-            transition: spring.transition(["rotate", "translate", "box-shadow"], "snappy"),
+            transition: spring.transition(["translate"], "snappy"),
           },
           "& .hint": { transition: "opacity 160ms ease" },
           "& details[open] > .cap": { animation: "dp-reveal 260ms ease-out" },
