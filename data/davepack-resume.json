@@ -611,6 +611,7 @@
         "Moved from contributor to tech lead in the first year; twice moved to lead a new team, each time leaving behind a teammate prepared to step into the tech lead role."
       ],
       "skills": [
+        { "skillId": "javascript", "usage": "The language across the React front-end and the Node services and SSR server behind it." },
         { "skillId": "react", "usage": "Primary UI library for the e-commerce application. Eight years of feature work, performance tuning, and architectural stewardship in a very large React codebase." },
         { "skillId": "redux", "usage": "Application state management across a codebase touched by 20+ teams; set and reviewed patterns for how teams use it." },
         { "skillId": "react-router", "usage": "Maintained a legacy React Router v5 app with a home-built, partially config-based routing layer, and is now leading its migration directly to React Router 7 framework mode, skipping the compat package and v6 entirely." },
