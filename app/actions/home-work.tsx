@@ -90,18 +90,6 @@ function Entry(handle: Handle<{ entry: TimelineEntry }>) {
             whiteSpace: "nowrap",
           },
           "& > .body": { padding: "0.25rem 0 1rem 1.05rem" },
-          "& > .body > p": { margin: "0 0 0.75rem" },
-          "& .highlights": { margin: "0 0 0.75rem", paddingLeft: "1.1rem" },
-          "& .highlights li": { margin: "0 0 0.35rem" },
-          "& .chips": {
-            listStyle: "none",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.4rem",
-            margin: "0 0 0.75rem",
-            padding: 0,
-          },
-          "& .more": { fontSize: "0.9375rem" },
           [MOTION_OK]: {
             "& > summary::before": { transition: "rotate 200ms steps(3)" },
             "&[open] > .body": { animation: "dp-reveal 260ms ease-out" },
@@ -118,34 +106,62 @@ function Entry(handle: Handle<{ entry: TimelineEntry }>) {
           {entry.kind === "project" ? <Chip>side project</Chip> : null}
           <span className="when">{formatRange(entry.start, entry.end, entry.current)}</span>
         </summary>
-        <div className="body">
-          <p>{entry.summary}</p>
-          {entry.highlights.length > 0 ? (
-            <ul className="highlights">
-              {entry.highlights.map((text) => (
-                <li key={text}>{text}</li>
-              ))}
-            </ul>
-          ) : null}
-          {entry.skillIds.length > 0 ? (
-            <ul className="chips" aria-label="Skills used">
-              {entry.skillIds.map((id) => (
-                <li key={id}>
-                  <Chip>{skillName(id)}</Chip>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-          {entry.orgUrl ? (
-            <p className="more">
-              <TextLink href={entry.orgUrl}>{hostname(entry.orgUrl)}</TextLink>
-            </p>
-          ) : null}
-          {entry.stories.map((story) => (
-            <StoryDetails key={story.id} story={story} />
-          ))}
-        </div>
+        <EntryBody entry={entry} />
       </details>
+    );
+  };
+}
+
+// The details of one job or project: summary, highlights, skills, link, and
+// stories. Shared by the Work timeline and the skill cards' windows.
+export function EntryBody(handle: Handle<{ entry: TimelineEntry }>) {
+  return () => {
+    let { entry } = handle.props;
+
+    return (
+      <div
+        className="body"
+        mix={css({
+          "& > p": { margin: "0 0 0.75rem" },
+          "& .highlights": { margin: "0 0 0.75rem", paddingLeft: "1.1rem" },
+          "& .highlights li": { margin: "0 0 0.35rem" },
+          "& .chips": {
+            listStyle: "none",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.4rem",
+            margin: "0 0 0.75rem",
+            padding: 0,
+          },
+          "& .more": { fontSize: "0.9375rem" },
+        })}
+      >
+        <p>{entry.summary}</p>
+        {entry.highlights.length > 0 ? (
+          <ul className="highlights">
+            {entry.highlights.map((text) => (
+              <li key={text}>{text}</li>
+            ))}
+          </ul>
+        ) : null}
+        {entry.skillIds.length > 0 ? (
+          <ul className="chips" aria-label="Skills used">
+            {entry.skillIds.map((id) => (
+              <li key={id} data-skill={id}>
+                <Chip>{skillName(id)}</Chip>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {entry.orgUrl ? (
+          <p className="more">
+            <TextLink href={entry.orgUrl}>{hostname(entry.orgUrl)}</TextLink>
+          </p>
+        ) : null}
+        {entry.stories.map((story) => (
+          <StoryDetails key={story.id} story={story} />
+        ))}
+      </div>
     );
   };
 }

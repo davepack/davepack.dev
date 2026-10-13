@@ -81,9 +81,11 @@ export function Chip(handle: Handle<{ children: RemixNode }>) {
 // The title bar across the top of a window: a control box on the left, the
 // title in the middle, and minimize/maximize boxes on the right. Without a
 // title it is purely decorative.
-export function TitleBar(handle: Handle<{ id?: string; children?: RemixNode }>) {
+export function TitleBar(
+  handle: Handle<{ id?: string; autofocus?: boolean; children?: RemixNode }>,
+) {
   return () => {
-    let { id, children } = handle.props;
+    let { id, autofocus, children } = handle.props;
     return (
       <div
         aria-hidden={children ? undefined : "true"}
@@ -130,11 +132,18 @@ export function TitleBar(handle: Handle<{ id?: string; children?: RemixNode }>) 
             letterSpacing: "0.04em",
             lineHeight: 1,
           },
+          "& h2:focus": { outline: "none" },
           "& .spacer": { flex: 1 },
         })}
       >
         <span className="box menu" aria-hidden="true" />
-        {children ? <h2 id={id}>{children}</h2> : <span className="spacer" />}
+        {children ? (
+          <h2 id={id} autofocus={autofocus} tabIndex={autofocus ? -1 : undefined}>
+            {children}
+          </h2>
+        ) : (
+          <span className="spacer" />
+        )}
         <span className="box min" aria-hidden="true" />
         <span className="box max" aria-hidden="true" />
       </div>
