@@ -1,18 +1,13 @@
+import type { Handle } from "remix/ui";
 import { css } from "remix/ui";
 import { spring } from "remix/ui/animation";
 
 import { Document } from "./document.tsx";
 import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
-import {
-  DARK,
-  MOTION_OK,
-  PIXEL_FONT,
-  TextLink,
-  TitleBar,
-  windowRules,
-} from "./home-primitives.tsx";
+import { MOTION_OK, PIXEL_FONT, TextLink, TitleBar, windowRules } from "./home-primitives.tsx";
 import { SkiSlope, skiRootRules } from "./home-ski.tsx";
 import { SkillStickers } from "./home-skills.tsx";
+import { ThemeSwitcher, themeRules, type Theme } from "./home-theme.tsx";
 import { WorkTimeline } from "./home-work.tsx";
 
 // Everything on the page is driven by this object.
@@ -44,57 +39,68 @@ const fontLinks = (
   </>
 );
 
-export function HomePage() {
+// Day on the mountain: fresh snow, ink outlines, a navy title bar, and a red
+// ski-jacket accent.
+const DAY_TOKENS = {
+  colorScheme: "light",
+  "--bg": "#f7fafd",
+  "--ink": "#13161c",
+  "--muted": "#566173",
+  "--accent": "#1f4fd1",
+  "--accent-soft": "rgba(31, 79, 209, 0.18)",
+  "--tint": "rgba(31, 79, 209, 0.07)",
+  "--hot": "#d12b2b",
+  "--rule": "#cdd5e1",
+  "--card": "#ffffff",
+  "--frame": "#13161c",
+  "--title": "#1d2f91",
+  "--title-ink": "#ffffff",
+  "--chrome": "#c3cad4",
+  "--chrome-hover": "#d3d9e1",
+  "--ink-on-chrome": "#13161c",
+  "--bevel-light": "#ffffff",
+  "--bevel-dark": "#7d8796",
+  "--mtn": "#c9d3e0",
+  "--mtn-back": "#dfe6ef",
+  "--snowcap": "#ffffff",
+  "--sun-display": "block",
+  "--moon-display": "none",
+};
+
+// Night skiing.
+const NIGHT_TOKENS = {
+  colorScheme: "dark",
+  "--bg": "#0d1726",
+  "--ink": "#e6edf7",
+  "--muted": "#93a1b8",
+  "--accent": "#8fb0ff",
+  "--accent-soft": "rgba(143, 176, 255, 0.24)",
+  "--tint": "rgba(143, 176, 255, 0.10)",
+  "--hot": "#ff6b5e",
+  "--rule": "#2a3a55",
+  "--card": "#121f33",
+  "--frame": "#6f84a8",
+  "--title": "#2b46c4",
+  "--title-ink": "#ffffff",
+  "--chrome": "#34445f",
+  "--chrome-hover": "#3d4f6d",
+  "--ink-on-chrome": "#e6edf7",
+  "--bevel-light": "#56698a",
+  "--bevel-dark": "#0a111d",
+  "--mtn": "#22324c",
+  "--mtn-back": "#1a2840",
+  "--snowcap": "#c9d6ea",
+  "--sun-display": "none",
+  "--moon-display": "block",
+};
+
+export function HomePage(handle: Handle<{ theme: Theme }>) {
   return () => (
     <Document head={fontLinks}>
       <main
         data-ski-root
         mix={css({
-          // Day on the mountain (default): fresh snow, ink outlines, a navy
-          // title bar, and a red ski-jacket accent.
-          "--bg": "#f7fafd",
-          "--ink": "#13161c",
-          "--muted": "#566173",
-          "--accent": "#1f4fd1",
-          "--accent-soft": "rgba(31, 79, 209, 0.18)",
-          "--tint": "rgba(31, 79, 209, 0.07)",
-          "--hot": "#d12b2b",
-          "--rule": "#cdd5e1",
-          "--card": "#ffffff",
-          "--frame": "#13161c",
-          "--title": "#1d2f91",
-          "--title-ink": "#ffffff",
-          "--chrome": "#c3cad4",
-          "--chrome-hover": "#d3d9e1",
-          "--ink-on-chrome": "#13161c",
-          "--bevel-light": "#ffffff",
-          "--bevel-dark": "#7d8796",
-          "--mtn": "#c9d3e0",
-          "--mtn-back": "#dfe6ef",
-          "--snowcap": "#ffffff",
-          // Night skiing.
-          [DARK]: {
-            "--bg": "#0d1726",
-            "--ink": "#e6edf7",
-            "--muted": "#93a1b8",
-            "--accent": "#8fb0ff",
-            "--accent-soft": "rgba(143, 176, 255, 0.24)",
-            "--tint": "rgba(143, 176, 255, 0.10)",
-            "--hot": "#ff6b5e",
-            "--rule": "#2a3a55",
-            "--card": "#121f33",
-            "--frame": "#6f84a8",
-            "--title": "#2b46c4",
-            "--title-ink": "#ffffff",
-            "--chrome": "#34445f",
-            "--chrome-hover": "#3d4f6d",
-            "--ink-on-chrome": "#e6edf7",
-            "--bevel-light": "#56698a",
-            "--bevel-dark": "#0a111d",
-            "--mtn": "#22324c",
-            "--mtn-back": "#1a2840",
-            "--snowcap": "#c9d6ea",
-          },
+          ...themeRules(DAY_TOKENS, NIGHT_TOKENS),
           ...skiRootRules,
           "& *, & *::before, & *::after": { boxSizing: "border-box" },
           position: "relative",
@@ -117,6 +123,7 @@ export function HomePage() {
         })}
       >
         <SkiSlope />
+        <ThemeSwitcher theme={handle.props.theme} />
         <div
           className="page"
           mix={css({

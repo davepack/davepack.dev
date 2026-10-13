@@ -4,7 +4,7 @@
 
 import { css } from "remix/ui";
 
-import { DARK, MOTION_OK } from "./home-primitives.tsx";
+import { MOTION_OK } from "./home-primitives.tsx";
 
 // One long carving turn after another; the svg clips it to the width of
 // whatever it sits under. The second track is the same line shifted down.
@@ -61,12 +61,8 @@ export function MountainDivider() {
         "& .back": { fill: "var(--mtn-back)" },
         "& .front": { fill: "var(--mtn)" },
         "& .cap": { fill: "var(--snowcap)" },
-        "& .sun, & .moon": { fill: "var(--hot)" },
-        "& .moon": { display: "none" },
-        [DARK]: {
-          "& .sun": { display: "none" },
-          "& .moon": { display: "block", fill: "var(--snowcap)" },
-        },
+        "& .sun": { fill: "var(--hot)", display: "var(--sun-display)" },
+        "& .moon": { fill: "var(--snowcap)", display: "var(--moon-display)" },
       })}
     >
       <rect className="sun" x="492" y="6" width="14" height="14" />

@@ -1,6 +1,8 @@
 import type { Handle, RemixNode } from "remix/ui";
 import { css } from "remix/ui";
 
+import { themeRules } from "./home-theme.tsx";
+
 export interface DocumentProps {
   children?: RemixNode;
   head?: RemixNode;
@@ -17,7 +19,8 @@ export function Document(handle: Handle<DocumentProps>) {
     let { children, head, title = DEFAULT_TITLE, description = DEFAULT_DESCRIPTION } = handle.props;
 
     return (
-      <html lang="en">
+      // The theme switcher also decides the scrollbar and form-control colors.
+      <html lang="en" mix={css(themeRules({ colorScheme: "light" }, { colorScheme: "dark" }))}>
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />

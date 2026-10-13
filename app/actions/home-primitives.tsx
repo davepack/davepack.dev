@@ -6,7 +6,6 @@ import { css } from "remix/ui";
 // Wrap every transition and animation in this so reduced-motion users get a
 // static page.
 export const MOTION_OK = "@media (prefers-reduced-motion: no-preference)";
-export const DARK = "@media (prefers-color-scheme: dark)";
 
 // Chunky pixel face for the name, title bars, buttons, and the game HUD.
 // Body copy stays in the system stack so it reads easily.

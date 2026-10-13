@@ -265,7 +265,12 @@ function main() {
   let W = 0;
   let H = 0;
   let scale = 3;
-  let pal = dark.matches ? PALETTES.night : PALETTES.day;
+  // Follow the theme switcher: Dark, Light, or the device setting.
+  const isNight = () => {
+    const choice = document.querySelector('input[name="theme"]:checked')?.value ?? "system";
+    return choice === "dark" || (choice === "system" && dark.matches);
+  };
+  let pal = isNight() ? PALETTES.night : PALETTES.day;
   let sheet = buildSheet(pal);
 
   let mode = "background";
@@ -905,10 +910,15 @@ function main() {
     }
   });
 
-  dark.addEventListener("change", () => {
-    pal = dark.matches ? PALETTES.night : PALETTES.day;
+  function applyTheme() {
+    pal = isNight() ? PALETTES.night : PALETTES.day;
     sheet = buildSheet();
     draw();
+  }
+
+  dark.addEventListener("change", applyTheme);
+  document.addEventListener("change", (event) => {
+    if (event.target instanceof HTMLInputElement && event.target.name === "theme") applyTheme();
   });
 
   // ---- Setup -------------------------------------------------------------
