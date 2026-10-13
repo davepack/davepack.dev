@@ -151,7 +151,7 @@ export function HomePage(handle: Handle<{ theme: Theme }>) {
         >
           <div mix={css({ ...windowRules, display: "flex", flexDirection: "column", gap: "2rem" })}>
             <div>
-              <TitleBar />
+              <TitleBar variant="page" label="About" />
               <Header />
             </div>
             <Bio />

@@ -21,6 +21,15 @@ export const windowRules = {
   boxShadow: "5px 5px 0 var(--frame)",
   padding: "0 var(--pad) var(--pad)",
   "@media (max-width: 600px)": { "--pad": "1rem", boxShadow: "4px 4px 0 var(--frame)" },
+  // Minimized: keep only the title bar. Hide every child that doesn't hold
+  // it, and anything after it in the wrapper that does. Each css() mixin gets
+  // its own cascade layer and later layers win, so overriding the children's
+  // own styles from here takes !important.
+  "&:has(.page-bar .tb-minimize:checked)": {
+    paddingBottom: 0,
+    "& > :not(.page-bar, :has(.page-bar)), & .page-bar ~ *": { display: "none !important" },
+    "& .page-bar": { marginBottom: "0 !important" },
+  },
 } as const;
 
 // Raised and pressed bevels for buttons drawn in the same style.
@@ -78,32 +87,83 @@ export function Chip(handle: Handle<{ children: RemixNode }>) {
   );
 }
 
-// The title bar across the top of a window: a control box on the left, the
-// title in the middle, and minimize/maximize boxes on the right. Without a
-// title it is purely decorative.
-export function TitleBar(
-  handle: Handle<{ id?: string; autofocus?: boolean; children?: RemixNode }>,
-) {
+// The title bar across the top of a window, with working controls:
+//
+// - "page" windows (About, Work, Skills) keep a decorative control box and
+//   get a minimize toggle that folds the window down to its title bar. It is
+//   a checkbox, so it works without JavaScript; windowRules does the folding.
+// - "dialog" windows (the skill cards) get a control box and a minimize
+//   button that both close the window (back into its card), plus a maximize
+//   toggle. The close buttons submit the dialog's method="dialog" form, so
+//   they also work without JavaScript.
+type TitleBarProps =
+  | { variant: "page"; label: string; id?: string; children?: RemixNode }
+  | {
+      variant: "dialog";
+      label: string;
+      id: string;
+      formId: string;
+      autofocus?: boolean;
+      children: RemixNode;
+    };
+
+export function TitleBar(handle: Handle<TitleBarProps>) {
   return () => {
-    let { id, autofocus, children } = handle.props;
+    let props = handle.props;
+    let { label, children } = props;
+    let heading = children ? (
+      <h2
+        id={props.id}
+        autofocus={props.variant === "dialog" ? props.autofocus : undefined}
+        tabIndex={props.variant === "dialog" && props.autofocus ? -1 : undefined}
+      >
+        {children}
+      </h2>
+    ) : (
+      <span className="spacer" />
+    );
+
     return (
       <div
-        aria-hidden={children ? undefined : "true"}
+        className={props.variant === "page" ? "titlebar page-bar" : "titlebar"}
         mix={css({
           display: "flex",
           alignItems: "stretch",
           height: "1.875rem",
-          margin: "0 calc(var(--pad) * -1) var(--pad)",
+          // --bleed lets a maximized window pad its content more than usual
+          // while the bar still runs edge to edge.
+          margin: "0 calc(var(--bleed, var(--pad)) * -1) var(--pad)",
           background: "var(--title)",
           color: "var(--title-ink)",
           borderBottom: "2px solid var(--frame)",
           "& .box": {
+            position: "relative",
             flex: "none",
             width: "1.875rem",
+            margin: 0,
+            padding: 0,
+            border: 0,
+            font: "inherit",
             background: "var(--chrome)",
             boxShadow: "inset -2px -2px 0 var(--bevel-dark), inset 2px 2px 0 var(--bevel-light)",
             display: "grid",
             placeItems: "center",
+          },
+          "& button.box, & label.box": { cursor: "pointer" },
+          "& button.box:hover, & label.box:hover": { background: "var(--chrome-hover)" },
+          "& button.box:active, & label.box:active": {
+            boxShadow: "inset 2px 2px 0 var(--bevel-dark), inset -2px -2px 0 var(--bevel-light)",
+          },
+          "& button.box:focus-visible, & label.box:has(:focus-visible)": {
+            outline: "2px solid var(--accent)",
+            outlineOffset: "-4px",
+          },
+          "& .box input": {
+            position: "absolute",
+            inset: 0,
+            margin: 0,
+            opacity: 0,
+            cursor: "inherit",
           },
           "& .menu": { borderRight: "2px solid var(--frame)" },
           "& .menu::before": {
@@ -121,6 +181,21 @@ export function TitleBar(
           },
           "& .min::before": { borderTop: "0.3rem solid var(--ink-on-chrome)" },
           "& .max::before": { borderBottom: "0.3rem solid var(--ink-on-chrome)" },
+          // A folded or maximized window shows the stacked restore arrows.
+          "& .box:has(:checked)": { alignContent: "center", rowGap: "2px" },
+          "& .box:has(:checked)::before, & .box:has(:checked)::after": {
+            content: '""',
+            borderLeft: "0.25rem solid transparent",
+            borderRight: "0.25rem solid transparent",
+          },
+          "& .box:has(:checked)::before": {
+            borderTop: 0,
+            borderBottom: "0.25rem solid var(--ink-on-chrome)",
+          },
+          "& .box:has(:checked)::after": {
+            borderBottom: 0,
+            borderTop: "0.25rem solid var(--ink-on-chrome)",
+          },
           "& h2": {
             flex: 1,
             margin: 0,
@@ -136,24 +211,48 @@ export function TitleBar(
           "& .spacer": { flex: 1 },
         })}
       >
-        <span className="box menu" aria-hidden="true" />
-        {children ? (
-          <h2 id={id} autofocus={autofocus} tabIndex={autofocus ? -1 : undefined}>
-            {children}
-          </h2>
+        {props.variant === "page" ? (
+          <>
+            <span className="box menu" aria-hidden="true" />
+            {heading}
+            <label className="box min">
+              <input type="checkbox" className="tb-minimize" aria-label={`Minimize ${label}`} />
+            </label>
+          </>
         ) : (
-          <span className="spacer" />
+          <>
+            <button
+              type="submit"
+              form={props.formId}
+              className="box menu"
+              data-close
+              aria-label={`Close ${label}`}
+            />
+            {heading}
+            <button
+              type="submit"
+              form={props.formId}
+              className="box min"
+              data-close
+              aria-label={`Minimize ${label}`}
+            />
+            <label className="box max">
+              <input type="checkbox" className="tb-maximize" aria-label={`Maximize ${label}`} />
+            </label>
+          </>
         )}
-        <span className="box min" aria-hidden="true" />
-        <span className="box max" aria-hidden="true" />
       </div>
     );
   };
 }
 
 // Section label used by the Work and Skills windows.
-export function SectionHeading(handle: Handle<{ id: string; children: RemixNode }>) {
-  return () => <TitleBar id={handle.props.id}>{handle.props.children}</TitleBar>;
+export function SectionHeading(handle: Handle<{ id: string; children: string }>) {
+  return () => (
+    <TitleBar variant="page" id={handle.props.id} label={handle.props.children}>
+      {handle.props.children}
+    </TitleBar>
+  );
 }
 
 // Rules shared by every <details> on the page: hide the native marker and draw

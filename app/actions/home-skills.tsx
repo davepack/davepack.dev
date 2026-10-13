@@ -31,7 +31,7 @@ import {
 import { EntryBody } from "./home-work.tsx";
 
 const ALL = "all";
-const SCRIPT_VERSION = "4";
+const SCRIPT_VERSION = "5";
 
 type Styles = Parameters<typeof css>[0];
 
@@ -88,7 +88,7 @@ export function SkillStickers() {
           padding: "0.2rem 0",
         },
         // Skill buttons: raised until picked, then pressed in title-bar blue.
-        "& label": {
+        "& label.pill": {
           ...bevelRules.raised,
           position: "relative",
           display: "inline-block",
@@ -100,15 +100,18 @@ export function SkillStickers() {
           cursor: "pointer",
           userSelect: "none",
         },
-        "& label:hover": { background: "var(--chrome-hover)" },
-        "& label:has(:checked)": {
+        "& label.pill:hover": { background: "var(--chrome-hover)" },
+        "& label.pill:has(:checked)": {
           ...bevelRules.pressed,
           translate: "1px 1px",
           background: "var(--title)",
           color: "var(--title-ink)",
         },
-        "& label:has(:focus-visible)": { outline: "2px solid var(--accent)", outlineOffset: "2px" },
-        "& label input": {
+        "& label.pill:has(:focus-visible)": {
+          outline: "2px solid var(--accent)",
+          outlineOffset: "2px",
+        },
+        "& label.pill input": {
           position: "absolute",
           inset: 0,
           margin: 0,
@@ -125,14 +128,14 @@ export function SkillStickers() {
           paddingTop: "1rem",
           borderTop: "2px solid var(--rule)",
         },
-        "& .status label": { flex: "none" },
+        "& .status .pill": { flex: "none" },
         "& .cap, & .hint": { margin: 0, fontSize: "0.9375rem", lineHeight: 1.55 },
         "& .cap": { display: "none" },
         "& .cap .name": { fontWeight: 600 },
         "& .hint": { color: "var(--muted)" },
         "&:has(input[name=skill]:not([value=all]):checked) .hint": { display: "none" },
         [MOTION_OK]: {
-          "& label": { transition: "translate 160ms cubic-bezier(0.2, 0.8, 0.2, 1)" },
+          "& label.pill": { transition: "translate 160ms cubic-bezier(0.2, 0.8, 0.2, 1)" },
         },
       })}
     >
@@ -142,7 +145,7 @@ export function SkillStickers() {
           <legend>{group.label}</legend>
           <div className="cloud">
             {group.skills.map((skill) => (
-              <label key={skill.id}>
+              <label key={skill.id} className="pill">
                 <input type="radio" name="skill" value={skill.id} />
                 {skill.name}
               </label>
@@ -151,7 +154,7 @@ export function SkillStickers() {
         </fieldset>
       ))}
       <div className="status">
-        <label>
+        <label className="pill">
           <input type="radio" name="skill" value={ALL} checked />
           All
         </label>
@@ -289,6 +292,7 @@ function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>)
   return () => {
     let { entry, dialogId } = handle.props;
     let headingId = `${dialogId}-heading`;
+    let formId = `${dialogId}-form`;
 
     return (
       <dialog
@@ -305,11 +309,22 @@ function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>)
           background: "var(--card)",
           border: "2px solid var(--frame)",
           boxShadow: "6px 6px 0 var(--frame)",
+          overflowX: "hidden",
+          interpolateSize: "allow-keywords",
           "&::backdrop": { background: "rgb(8 12 20 / 0.55)" },
           "& > .inner": {
             "--pad": "1.5rem",
-            padding: "0 var(--pad) var(--pad)",
+            padding: "0 var(--bleed, var(--pad)) var(--pad)",
             "@media (max-width: 600px)": { "--pad": "1rem" },
+          },
+          // Maximized: fill the screen, but keep the text a readable width.
+          "&:has(.tb-maximize:checked)": {
+            width: "100vw",
+            height: "100dvh",
+            maxWidth: "100vw",
+            maxHeight: "100dvh",
+            boxShadow: "none",
+            "& > .inner": { "--bleed": "max(var(--pad), (100vw - 46rem) / 2)" },
           },
           "& .when": {
             margin: "0 0 0.75rem",
@@ -328,6 +343,7 @@ function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>)
           "& form button:hover": { background: "var(--chrome-hover)" },
           "& form button:active": bevelRules.pressed,
           [MOTION_OK]: {
+            transition: "width 260ms ease, height 260ms ease, max-height 260ms ease",
             "&::backdrop": { transition: "background-color 260ms ease" },
             "@starting-style": { "&[open]::backdrop": { background: "transparent" } },
           },
@@ -336,7 +352,13 @@ function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>)
         <div className="inner">
           {/* Focus starts on the title, so the window opens at the top rather
               than scrolled down to the first link inside. */}
-          <TitleBar id={headingId} autofocus>
+          <TitleBar
+            variant="dialog"
+            id={headingId}
+            label={entry.org ?? entry.title}
+            formId={formId}
+            autofocus
+          >
             {entry.org ?? entry.title}
           </TitleBar>
           <p className="when">
@@ -344,7 +366,7 @@ function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>)
             {formatRange(entry.start, entry.end, entry.current)}
           </p>
           <EntryBody entry={entry} />
-          <form method="dialog">
+          <form method="dialog" id={formId}>
             <button type="submit" data-close>
               Close
             </button>

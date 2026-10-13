@@ -141,9 +141,12 @@ if (section) {
       event.preventDefault();
       close(dialog);
     });
-    // If it closed some other way, still release the page.
+    // If it closed some other way, still release the page. Either way, the
+    // window opens at its normal size next time.
     dialog.addEventListener("close", () => {
       if (!closing) lockScroll(false);
+      const maximize = dialog.querySelector(".tb-maximize");
+      if (maximize) maximize.checked = false;
     });
   }
 }
