@@ -1,18 +1,20 @@
-// Theme switcher: three radio buttons styled as retro push buttons. The
-// checked radio is the single source of truth. The page's tokens key off it
-// with :has(), so switching works without JavaScript; public/theme.js saves
-// the choice in a cookie, and the server reads that cookie to check the
-// right radio on the next visit, so there is no flash.
+// Theme switcher: Light and Dark radio buttons styled as retro push buttons.
+// Until the visitor picks one, neither is checked and the page follows the
+// device, with the matching button drawn pressed. The checked radio is the
+// single source of truth: the page's tokens key off it with :has(), so
+// switching works without JavaScript; public/theme.js saves the choice in a
+// cookie, and the server reads that cookie to check the right radio on the
+// next visit, so there is no flash.
 
 import type { Handle } from "remix/component";
 import { css } from "remix/component";
 
 import { PIXEL_FONT, bevelRules } from "./home-primitives.tsx";
 
+// "system" means no choice yet: follow the device.
 export type Theme = "system" | "light" | "dark";
 
 const OPTIONS: { value: Theme; label: string }[] = [
-  { value: "system", label: "System" },
   { value: "light", label: "Light" },
   { value: "dark", label: "Dark" },
 ];
@@ -24,17 +26,24 @@ export function themeFromRequest(request: Request): Theme {
 
 type Styles = Parameters<typeof css>[0];
 
+const NO_CHOICE = "&:not(:has(input[name=theme]:checked))";
+
 // Selectors for the page root: apply the night tokens when the visitor chose
-// Dark, or chose System and their device is in dark mode.
+// Dark, or hasn't chosen and their device is in dark mode.
 export function themeRules(light: Styles, night: Styles): Styles {
   return {
     ...light,
-    "@media (prefers-color-scheme: dark)": {
-      "&:has(input[name=theme][value=system]:checked)": night,
-    },
+    "@media (prefers-color-scheme: dark)": { [NO_CHOICE]: night },
     "&:has(input[name=theme][value=dark]:checked)": night,
   };
 }
+
+const pressedRules = {
+  ...bevelRules.pressed,
+  background: "var(--title)",
+  color: "var(--title-ink)",
+};
+const raisedRules = { ...bevelRules.raised, color: "var(--ink-on-chrome)" };
 
 export function ThemeSwitcher(handle: Handle<{ theme: Theme }>) {
   return () => (
@@ -73,12 +82,13 @@ export function ThemeSwitcher(handle: Handle<{ theme: Theme }>) {
         },
         "& label + label": { borderLeft: 0 },
         "& label:hover": { background: "var(--chrome-hover)" },
-        "& label:has(:checked)": {
-          ...bevelRules.pressed,
-          background: "var(--title)",
-          color: "var(--title-ink)",
-          cursor: "default",
+        // Before a choice, the button matching the device looks pressed.
+        [`${NO_CHOICE} label:has([value=light])`]: pressedRules,
+        "@media (prefers-color-scheme: dark)": {
+          [`${NO_CHOICE} label:has([value=light])`]: raisedRules,
+          [`${NO_CHOICE} label:has([value=dark])`]: pressedRules,
         },
+        "& label:has(:checked)": { ...pressedRules, cursor: "default" },
         "& label:has(:focus-visible)": {
           outline: "2px solid var(--accent)",
           outlineOffset: "2px",
@@ -99,7 +109,7 @@ export function ThemeSwitcher(handle: Handle<{ theme: Theme }>) {
           {option.label}
         </label>
       ))}
-      <script type="module" src="/theme.js?v=1" />
+      <script type="module" src="/theme.js?v=2" />
     </fieldset>
   );
 }
