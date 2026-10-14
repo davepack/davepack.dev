@@ -15,6 +15,18 @@ const BEAST_SPEED = 104; // a bit faster than cruising, slower than boosting
 const ANGLES = [0, 0.45, 0.9, Math.PI / 2];
 const SPEED_FACTOR = [1, 0.85, 0.5, 0];
 
+// The background skier's antics, in seconds: how often it skis into
+// something on purpose, how often the snow beast turns up, and how long the
+// beast tails it before pouncing.
+const MISCHIEF_EVERY = [15, 35];
+const FIRST_CHASE = [25, 60]; // sooner the first time, so visitors see it
+const CHASE_EVERY = [40, 100];
+const CHASE_FOR = [6, 16];
+const SWEAR_FOR = 2.2;
+// How close to the screen edge the background skier may go. On a phone the
+// only uncovered strip is the page gutter, about 8 world px wide.
+const EDGE = 4;
+
 const SAVE_PAUSED = "ski:paused";
 const SAVE_BEST = "ski:best";
 
@@ -71,7 +83,8 @@ const SPRITES = {
     "..bbbb..",
   ],
   rock: ["...OOOO...", "..OooowOO.", ".OoooooooO", "OooooooooO", "OOOOOOOOOO"],
-  stump: [".bbbbb.", "byybyyb", "bbbbbbb", ".bbbbb."],
+  // Cut top with growth rings, bark sides, and roots splayed into the snow.
+  stump: ["..TTTTT..", ".TRRRRRT.", ".TTRRRTT.", ".DbTTTbD.", ".bbDbbbb.", "DbbbbDbbD"],
   mogul: ["...mmmm...", ".mm....mm.", "m........m"],
   ramp: ["..kkkkkkkkkk..", ".kyyyyyyyyyyk.", "kyyyyyyyyyyyyk", "kbbbbbbbbbbbbk", ".kkkkkkkkkkkk."],
   redFlag: ["krrr", "krrr", "kr..", "k...", "k...", "k...", "k...", "k..."],
@@ -169,6 +182,19 @@ const KINDS = {
 };
 const TOTAL_WEIGHT = Object.values(KINDS).reduce((sum, kind) => sum + kind.weight, 0);
 
+// Grawlix for the speech bubble after a crash: unprintable, by design.
+const GLYPHS = {
+  "#": [".#.#.", "#####", ".#.#.", "#####", ".#.#."],
+  $: [".###.", "#.#..", ".###.", "..#.#", ".###."],
+  "%": ["##..#", "##.#.", "..#..", ".#.##", "#..##"],
+  "&": [".##..", "#..#.", ".##..", "#..#.", ".##.#"],
+  "@": [".###.", "#.###", "#.#.#", "#.###", ".##.."],
+  "*": ["#.#", ".#.", "###", ".#.", "#.#"],
+  "!": ["#", "#", "#", ".", "#"],
+};
+const CURSES = ["#", "$", "%", "&", "@", "*"];
+const INKS = ["k", "r", "B"];
+
 const SHARED = {
   k: "#141820",
   g: "#2f8f46",
@@ -184,6 +210,9 @@ const SHARED = {
   C: "#3f7fb3",
   h: "#f08a24",
   n: "#4a5160", // ski pants and poles: readable on day snow and at night
+  D: "#4e2f17", // dark bark
+  T: "#d9a066", // cut wood
+  R: "#a86b3c", // growth rings
 };
 const PALETTES = {
   day: {
@@ -228,6 +257,7 @@ const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 const approach = (n, target, step) =>
   n < target ? Math.min(n + step, target) : Math.max(n - step, target);
 const heading = (dir) => Math.sign(dir) * ANGLES[Math.abs(dir)];
+const between = ([lo, hi]) => lo + Math.random() * (hi - lo);
 
 // mulberry32: small, fast, and good enough for scattering trees.
 function rng(seed) {
@@ -248,6 +278,8 @@ function main() {
   const playButton = document.getElementById("ski-play");
   const ctx = canvas?.getContext("2d");
   if (!root || !ctx || !hud || !controls || !pauseButton || !playButton) return;
+  // The page's windows; the set never changes, only their sizes.
+  const windows = root.querySelectorAll(".page > *");
 
   const stat = (name) => hud.querySelector(`[data-stat="${name}"]`);
   const stats = {
@@ -284,9 +316,23 @@ function main() {
   player.ignore = null;
   const cam = { x: 0, y: 0 };
   const keys = { boost: false };
-  const pilot = { next: 0, clock: 0, phase: Math.random() * 10, want: 1 };
+  const pilot = {
+    next: 0,
+    clock: 0,
+    phase: Math.random() * 10,
+    want: 1,
+    hurry: 1,
+    rects: [],
+    blocked: [],
+    lane: null,
+    mischief: null,
+    nextMischief: between(MISCHIEF_EVERY),
+    nextChase: between(FIRST_CHASE),
+  };
   let run = null;
   let beast = null;
+  let eaten = null; // the background skier between being caught and getting back up
+  let bubble = null;
   let best = Number(load(SAVE_BEST)) || 0;
   let messageTimer = 0;
   let hudClock = 0;
@@ -353,10 +399,10 @@ function main() {
     return out;
   }
 
-  function hazardAt(x, y, pad) {
+  function hazardAt(x, y, pad, except = null) {
     for (const o of objectsIn(x - 16, y - 8, x + 16, y + 16)) {
       const kind = KINDS[o.kind];
-      if (kind.hit !== "crash") continue;
+      if (kind.hit !== "crash" || o === except) continue;
       if (Math.abs(o.x - x) < kind.hx + pad && y > o.y - kind.hh - pad && y < o.y + pad)
         return true;
     }
@@ -409,7 +455,19 @@ function main() {
   // ---- Simulation --------------------------------------------------------
 
   function update(dt) {
-    if (mode === "background") steerAutopilot(dt);
+    if (bubble) {
+      bubble.t -= dt;
+      if (bubble.t <= 0) bubble = null;
+    }
+    if (mode === "background") {
+      if (eaten) {
+        digest(dt);
+        moveFlakes(dt);
+        return;
+      }
+      steerAutopilot(dt);
+      chaseInBackground(dt);
+    }
     if (run?.caught) {
       run.caughtTime += dt;
       if (beast) beast.t += dt;
@@ -433,11 +491,12 @@ function main() {
       if (p.crashed <= 0) {
         p.dir = 0;
         p.speed = 0;
+        swear();
       }
       return;
     }
     const boosting = mode === "play" && keys.boost && Math.abs(p.dir) <= 1;
-    const top = (mode === "play" ? PLAY_SPEED : BG_SPEED) * (boosting ? BOOST : 1);
+    const top = mode === "play" ? PLAY_SPEED * (boosting ? BOOST : 1) : BG_SPEED * pilot.hurry;
     const target = top * SPEED_FACTOR[Math.abs(p.dir)];
     const rate = target > p.speed ? top * 0.7 : top * 2;
     p.speed = approach(p.speed, target, rate * dt);
@@ -482,42 +541,197 @@ function main() {
   }
 
   // The autopilot looks a couple of seconds down each possible line, avoids
-  // anything solid, and otherwise drifts toward a slowly wandering target so
-  // it uses the whole width of the window.
+  // anything solid, and otherwise drifts toward a slowly wandering target
+  // inside a lane of the screen that no page window covers, so it stays in
+  // view. Now and then it picks an obstacle and skis into it on purpose.
   function steerAutopilot(dt) {
     pilot.clock += dt;
     pilot.next -= dt;
+    if (!beast && !pilot.mischief) pilot.nextMischief -= dt;
     if (pilot.next > 0 || player.crashed > 0) return;
     pilot.next = 0.2;
+    pilot.rects = [...windows].map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0);
+    pilot.blocked = blockedSpans();
+    pilot.lane = pickLane(pilot.blocked);
+    const hidden = pilot.blocked.some(([a, b]) => player.x > a + 6 && player.x < b - 6);
+    // While chased, stay slower than the beast's top speed so it can close in.
+    pilot.hurry = Math.min((beast ? 1.7 : 1) * (hidden ? 2 : 1), beast ? 1.9 : 2.5);
+    updateMischief();
     pilot.want = bestLine();
     if (player.dir < pilot.want) player.dir++;
     else if (player.dir > pilot.want) player.dir--;
   }
 
+  // Horizontal spans, in world x, of the page windows covering the skier's
+  // row on screen (plus a little ahead and behind, as the page scrolls).
+  function blockedSpans() {
+    const top = (player.y - cam.y - 20) * scale - 48;
+    const bottom = (player.y - cam.y + 8) * scale + 48;
+    const spans = [];
+    for (const r of pilot.rects) {
+      if (r.bottom < top || r.top > bottom) continue;
+      spans.push([cam.x + r.left / scale - 6, cam.x + r.right / scale + 6]);
+    }
+    return spans;
+  }
+
+  // Whether a page window covers this world position on screen.
+  function covered(x, y) {
+    const sx = (x - cam.x) * scale;
+    const sy = (y - cam.y) * scale;
+    return pilot.rects.some(
+      (r) => sx > r.left - 12 && sx < r.right + 12 && sy > r.top - 24 && sy < r.bottom + 12,
+    );
+  }
+
+  // The open lane the skier is in, or the nearest one. None on a narrow
+  // screen where the windows leave no room beside them.
+  function pickLane(spans) {
+    let lanes = [[cam.x + 10, cam.x + W - 10]];
+    for (const [a, b] of spans) {
+      lanes = lanes.flatMap(([lo, hi]) => [
+        [lo, Math.min(hi, a)],
+        [Math.max(lo, b), hi],
+      ]);
+    }
+    lanes = lanes.filter(([lo, hi]) => hi - lo >= 16);
+    const distance = ([lo, hi]) => Math.max(lo - player.x, player.x - hi, 0);
+    lanes.sort((l1, l2) => distance(l1) - distance(l2));
+    return lanes[0] ?? null;
+  }
+
+  function wanderTarget() {
+    if (pilot.mischief) return pilot.mischief.x;
+    const swing = Math.sin(pilot.clock * 0.05 + pilot.phase);
+    const lane = pilot.lane;
+    if (lane) return lane[0] + (lane[1] - lane[0]) * (0.5 + 0.4 * swing);
+    // Nowhere fully in view: sweep from one edge to the other, passing
+    // quickly behind the windows. Aim past the edge; the camera stops the
+    // skier EDGE px in, riding the strip of gutter that's still visible.
+    return Math.sin(pilot.clock * 0.12 + pilot.phase) > 0 ? cam.x - 40 : cam.x + W + 40;
+  }
+
+  function updateMischief() {
+    const target = pilot.mischief;
+    if (target) {
+      // Done once it hits (or somehow misses) the thing.
+      if (player.y > target.y + 4) {
+        pilot.mischief = null;
+        pilot.nextMischief = between(MISCHIEF_EVERY);
+      }
+      return;
+    }
+    // Only crash where it will be seen: never on a screen with no open lane,
+    // and never into something a window covers.
+    const lane = pilot.lane;
+    if (pilot.nextMischief > 0 || beast || !lane) return;
+    const ahead = objectsIn(lane[0], player.y + 30, lane[1], player.y + 110).filter(
+      (o) =>
+        KINDS[o.kind].hit === "crash" &&
+        Math.abs(o.x - player.x) < (o.y - player.y) * 0.6 &&
+        !covered(o.x, o.y),
+    );
+    ahead.sort((o1, o2) => o1.y - o2.y);
+    pilot.mischief = ahead[0] ?? null;
+  }
+
   function bestLine() {
     const p = player;
-    const target = cam.x + W * (0.5 + 0.4 * Math.sin(pilot.clock * 0.05 + pilot.phase));
+    const target = wanderTarget();
+    const speed = BG_SPEED * pilot.hurry;
     let bestDir = 0;
     let bestScore = Infinity;
     for (let d = -2; d <= 2; d++) {
       const a = heading(d);
-      const v = Math.max(BG_SPEED * SPEED_FACTOR[Math.abs(d)], 6);
+      const v = Math.max(speed * SPEED_FACTOR[Math.abs(d)], 6);
       let score = Math.abs(d - p.dir) * 2 + (Math.abs(d) === 2 ? 3 : 0);
       for (let t = 0.25; t <= 2.5; t += 0.25) {
-        if (hazardAt(p.x + Math.sin(a) * v * t, p.y + Math.cos(a) * v * t, 4)) {
+        if (hazardAt(p.x + Math.sin(a) * v * t, p.y + Math.cos(a) * v * t, 4, pilot.mischief)) {
           score += (2.75 - t) * 60;
           break;
         }
       }
       const endX = p.x + Math.sin(a) * v * 2;
-      if (endX < cam.x + 16 || endX > cam.x + W - 16) score += 200;
-      score += Math.abs(endX - target) * 0.3;
+      // Stay on screen while there's a lane (scaled, so it can still ease up
+      // to the edge). With no lane, the camera keeps the skier in view.
+      if (pilot.lane) score += Math.max(cam.x + EDGE - endX, endX - (cam.x + W - EDGE), 0) * 6;
+      if (pilot.lane && pilot.blocked.some(([lo, hi]) => endX > lo && endX < hi)) score += 120;
+      if (pilot.mischief) {
+        // Line up with the obstacle by the time we reach its row.
+        const down = Math.cos(a) * v;
+        const t = down > 1 ? Math.min((pilot.mischief.y - p.y) / down, 4) : 4;
+        score += Math.abs(p.x + Math.sin(a) * v * t - target) * 2;
+      } else {
+        score += Math.abs(endX - target) * 0.3;
+      }
       if (score < bestScore) {
         bestScore = score;
         bestDir = d;
       }
     }
     return bestDir;
+  }
+
+  // Every so often the snow beast bursts in from the top of the screen, tails
+  // the skier for a while, then pounces.
+  function chaseInBackground(dt) {
+    if (!beast) {
+      if (player.crashed > 0) return;
+      pilot.nextChase -= dt;
+      if (pilot.nextChase > 0) return;
+      const side = Math.random() < 0.5 ? -1 : 1;
+      beast = { x: player.x + side * 40, y: cam.y - 16, t: 0, side, chase: between(CHASE_FOR) };
+      pilot.mischief = null;
+      pilot.nextMischief = between(MISCHIEF_EVERY);
+      return;
+    }
+    beast.t += dt;
+    beast.chase -= dt;
+    // While tailing, aim for a spot just behind the skier; then go for it.
+    const pouncing = beast.chase <= 0;
+    const goalX = pouncing ? player.x : player.x + beast.side * 10;
+    const goalY = pouncing ? player.y : player.y - 24;
+    const dx = goalX - beast.x;
+    const dy = goalY - beast.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const speed = pouncing ? BG_SPEED * 3 : Math.min(dist * 2, BG_SPEED * 2.5);
+    const step = Math.min(dist, speed * dt);
+    beast.x += (dx / dist) * step;
+    beast.y += (dy / dist) * step;
+    if (pouncing && dist < 5 && player.z < 4) {
+      eaten = { t: 0 };
+      player.speed = 0;
+      player.crashed = 0;
+      bubble = null;
+    }
+  }
+
+  // Munch, wander off, then let the skier pick itself back up (swearing).
+  function digest(dt) {
+    eaten.t += dt;
+    beast.t += dt;
+    if (eaten.t < 1.8) return;
+    beast.x += beast.side * BG_SPEED * 2 * dt;
+    beast.y -= BG_SPEED * 2 * dt;
+    const sx = beast.x - cam.x;
+    const sy = beast.y - cam.y;
+    if (sx < -20 || sx > W + 20 || sy < -20) {
+      beast = null;
+      eaten = null;
+      pilot.hurry = 1;
+      pilot.nextChase = between(CHASE_EVERY);
+      player.crashed = 1;
+    }
+  }
+
+  function swear() {
+    const count = 3 + Math.floor(Math.random() * 3);
+    const glyphs = Array.from({ length: count }, () => ({
+      glyph: CURSES[Math.floor(Math.random() * CURSES.length)],
+      ink: INKS[Math.floor(Math.random() * INKS.length)],
+    }));
+    glyphs.push({ glyph: "!", ink: "r" });
+    bubble = { t: SWEAR_FOR, glyphs };
   }
 
   function updateCamera() {
@@ -529,8 +743,8 @@ function main() {
       else if (player.x > right) cam.x += player.x - right;
     } else {
       // The background camera stays put sideways; just keep the skier in it.
-      if (player.x < cam.x + 8) cam.x = player.x - 8;
-      else if (player.x > cam.x + W - 8) cam.x = player.x - W + 8;
+      if (player.x < cam.x + EDGE) cam.x = player.x - EDGE;
+      else if (player.x > cam.x + W - EDGE) cam.x = player.x - W + EDGE;
     }
   }
 
@@ -630,17 +844,19 @@ function main() {
       y: o.y,
       draw: () => blit(sheet[o.kind], o.x - ox, o.y - oy),
     }));
-    items.push({ y: player.y, draw: () => drawSkier(ox, oy) });
+    // A nudge forward so the skier is drawn in front of whatever it just hit.
+    items.push({ y: player.y + 4, draw: () => drawSkier(ox, oy) });
     if (beast) items.push({ y: beast.y, draw: () => drawBeast(ox, oy) });
     items.sort((a, b) => a.y - b.y);
     for (const item of items) item.draw();
+    if (bubble && !run?.caught && !eaten) drawBubble(ox, oy);
 
     ctx.fillStyle = pal.flake;
     for (const f of flakes) ctx.fillRect(Math.round(f.x), Math.round(f.y), 1, 1);
   }
 
   function drawSkier(ox, oy) {
-    if (run?.caught) return;
+    if (run?.caught || eaten) return;
     const p = player;
     const sx = Math.round(p.x) - ox;
     const sy = Math.round(p.y) - oy;
@@ -684,10 +900,38 @@ function main() {
 
   function drawBeast(ox, oy) {
     const flip = beast.x > player.x;
-    const fast = run?.caught;
+    const fast = run?.caught || (eaten && eaten.t < 1.8);
     const second = Math.floor(beast.t / (fast ? 0.12 : 0.25)) % 2 === 1;
     const name = (second ? "beastB" : "beastA") + (flip ? "Flip" : "");
     blit(sheet[name], Math.round(beast.x) - ox, Math.round(beast.y) - oy + 1);
+  }
+
+  // A comic speech bubble over the skier's head, full of grawlix.
+  function drawBubble(ox, oy) {
+    const widths = bubble.glyphs.map(({ glyph }) => GLYPHS[glyph][0].length);
+    const w = widths.reduce((sum, n) => sum + n + 1, 0) + 3;
+    const h = 9;
+    const cx = Math.round(player.x) - ox;
+    const bottom = Math.round(player.y - player.z) - oy - 15;
+    const left = clamp(cx - Math.floor(w / 2), 1, W - w - 1);
+    const top = bottom - h;
+    ctx.fillStyle = pal.k;
+    ctx.fillRect(left, top, w, h);
+    ctx.fillRect(cx - 1, bottom, 3, 1);
+    ctx.fillRect(cx, bottom + 1, 1, 2);
+    ctx.fillStyle = pal.w;
+    ctx.fillRect(left + 1, top + 1, w - 2, h - 2);
+    ctx.fillRect(cx, bottom - 1, 1, 2);
+    let x = left + 2;
+    bubble.glyphs.forEach(({ glyph, ink }, i) => {
+      ctx.fillStyle = pal[ink];
+      GLYPHS[glyph].forEach((row, y) => {
+        for (let gx = 0; gx < row.length; gx++) {
+          if (row[gx] === "#") ctx.fillRect(x + gx, top + 2 + y, 1, 1);
+        }
+      });
+      x += widths[i] + 1;
+    });
   }
 
   // ---- HUD ---------------------------------------------------------------
@@ -767,6 +1011,10 @@ function main() {
   function newRun() {
     run = { startY: player.y, time: 0, caught: false, caughtTime: 0, over: false, meters: 0 };
     beast = null;
+    eaten = null;
+    bubble = null;
+    pilot.mischief = null;
+    pilot.hurry = 1;
     player.crashed = 0;
     player.ignore = null;
     player.dir = 0;
@@ -795,8 +1043,12 @@ function main() {
     hud.hidden = true;
     run = null;
     beast = null;
+    eaten = null;
+    bubble = null;
     keys.boost = false;
     player.crashed = 0;
+    pilot.nextChase = between(CHASE_EVERY);
+    pilot.nextMischief = between(MISCHIEF_EVERY);
     if (bgPaused) stop();
     else start();
     playButton.focus();

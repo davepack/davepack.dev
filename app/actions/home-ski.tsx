@@ -13,7 +13,7 @@ export const skiRootRules = {
   "&[data-mode=play] .page": { visibility: "hidden" },
 } as const;
 
-const SCRIPT_VERSION = "2";
+const SCRIPT_VERSION = "6";
 
 export function SkiSlope() {
   return () => (
