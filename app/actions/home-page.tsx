@@ -2,9 +2,10 @@ import type { Handle } from "remix/component";
 import { css } from "remix/component";
 
 import { Document } from "./document.tsx";
-import { GameIcon } from "./public/game-icon.tsx";
+import { DesktopIcons } from "./public/desktop-icons.tsx";
+import { WindowTitleBar } from "./public/window-title-bar.tsx";
 import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
-import { MOTION_OK, PIXEL_FONT, TextLink, TitleBar, windowRules } from "./home-primitives.tsx";
+import { MOTION_OK, PIXEL_FONT, TextLink, windowRules } from "./home-primitives.tsx";
 import { SkiSlope, skiRootRules } from "./home-ski.tsx";
 import { SkillStickers } from "./home-skills.tsx";
 import { ThemeSwitcher, themeRules, type Theme } from "./home-theme.tsx";
@@ -27,6 +28,13 @@ const content = {
 
 // A springy overshoot for the avatar's hover tilt.
 const SPRING_BOUNCY = "450ms cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+// The windows that can be moved, minimized, and reopened from an icon.
+const DESKTOP_WINDOWS = [
+  { id: "about", label: "About", art: "about" },
+  { id: "work", label: "Work", art: "work" },
+  { id: "skills", label: "Skills", art: "skills" },
+] as const satisfies { id: string; label: string; art: string }[];
 
 const FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
@@ -129,7 +137,6 @@ export function HomePage(handle: Handle<{ theme: Theme }>) {
       >
         <SkiSlope />
         <ThemeSwitcher theme={handle.props.theme} />
-        <GameIcon />
         <div
           className="page"
           mix={css({
@@ -153,9 +160,13 @@ export function HomePage(handle: Handle<{ theme: Theme }>) {
             },
           })}
         >
-          <div mix={css({ ...windowRules, display: "flex", flexDirection: "column", gap: "2rem" })}>
+          <DesktopIcons windows={DESKTOP_WINDOWS} />
+          <div
+            data-window="about"
+            mix={css({ ...windowRules, display: "flex", flexDirection: "column", gap: "2rem" })}
+          >
             <div>
-              <TitleBar variant="page" label="About" />
+              <WindowTitleBar windowId="about" label="About" />
               <Header />
             </div>
             <Bio />

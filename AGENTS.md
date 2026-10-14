@@ -6,14 +6,16 @@ This app was scaffolded with `remix new`. Use these conventions when continuing 
 
 ```sh
 npm i
-npm run dev        # wrangler dev at http://localhost:8787
-npm run deploy
+npm run dev        # wrangler dev at http://localhost:8787 (builds the client bundle first)
+npm run deploy     # also builds the client bundle first
+npm run build:client
+npm test           # node --test over app/**/*.test.ts
 npm run typecheck
 npm run lint
 npm run fmt
 ```
 
-The app is server-rendered only and runs on Cloudflare Workers. There is no client entry, no asset server, and no test suite yet.
+The app runs on Cloudflare Workers and is server-rendered, with a few Remix client entries hydrated in the browser. There is no asset server: esbuild bundles `app/actions/public/entry.ts` and the client entries it registers into `public/js/app.js` (git-ignored), and Wrangler's `build.command` runs that before dev and deploy. Client entry IDs point at that bundle (`/js/app.js#ExportName`). Never import resume data into browser code; it would ship in the public bundle.
 
 ## Building Features
 
@@ -28,7 +30,8 @@ Refer to ./.agents/skills/remix/SKILL.md for the Remix mental model and how to f
 - `app/middleware/render.tsx` installs the request-scoped renderer used by actions
 - `app/data/resume.ts` is the only module that reads `data/davepack-resume.json`. It never exposes `profile` and drops any entry marked `verify: true`, so clear that flag in the JSON to publish an entry
 - `app/actions/home-*.tsx` are the home route's sections (work timeline, skill stickers, flourishes, shared primitives)
-- Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets
+- `app/actions/public/` is browser code: `entry.ts` (starts the runtime with `run()`), the desktop model, and the client entries (window title bars, desktop icons)
+- Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets, including the plain scripts `ski.js`, `skills.js`, and `theme.js`
 
 ## Route Ownership
 

@@ -7,6 +7,7 @@
     "build:client": "esbuild app/actions/public/entry.ts --bundle --format=esm --target=es2022 --minify --sourcemap --outfile=public/js/app.js",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
+    "test": "node --test 'app/**/*.test.ts'",
     "lint": "oxlint",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check"

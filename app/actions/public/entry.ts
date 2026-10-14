@@ -8,9 +8,11 @@
 
 import { run } from "remix/component";
 
-import { GameIcon } from "./game-icon.tsx";
+import { setFlush } from "./desktop-dom.ts";
+import { DesktopIcons } from "./desktop-icons.tsx";
+import { WindowTitleBar } from "./window-title-bar.tsx";
 
-const components: Record<string, unknown> = { GameIcon };
+const components: Record<string, unknown> = { DesktopIcons, WindowTitleBar };
 
 let app = run({
   async loadModule(moduleUrl, exportName) {
@@ -21,6 +23,9 @@ let app = run({
     return Component;
   },
 });
+
+// View transitions need component updates applied on the spot.
+setFlush(() => app.flush());
 
 app.addEventListener("error", (event) => {
   console.error("Component error:", event.error);

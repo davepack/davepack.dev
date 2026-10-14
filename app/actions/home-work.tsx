@@ -14,19 +14,19 @@ import {
 import {
   Chip,
   MOTION_OK,
-  SectionHeading,
   TextLink,
   chevronRules,
   detailsHeightRules,
   windowRules,
 } from "./home-primitives.tsx";
+import { WindowTitleBar } from "./public/window-title-bar.tsx";
 
 export function WorkTimeline() {
   let entries = timeline();
 
   return () => (
-    <section aria-labelledby="work-heading" mix={css(windowRules)}>
-      <SectionHeading id="work-heading">Work</SectionHeading>
+    <section aria-labelledby="work-heading" data-window="work" mix={css(windowRules)}>
+      <WindowTitleBar windowId="work" label="Work" title="Work" headingId="work-heading" />
       <ol
         mix={css({
           listStyle: "none",

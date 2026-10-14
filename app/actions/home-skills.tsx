@@ -23,12 +23,12 @@ import {
   Chip,
   MOTION_OK,
   PIXEL_FONT,
-  SectionHeading,
   TitleBar,
   bevelRules,
   windowRules,
 } from "./home-primitives.tsx";
 import { EntryBody } from "./home-work.tsx";
+import { WindowTitleBar } from "./public/window-title-bar.tsx";
 
 const ALL = "all";
 const SCRIPT_VERSION = "5";
@@ -68,6 +68,7 @@ export function SkillStickers() {
   return () => (
     <section
       aria-labelledby="skills-heading"
+      data-window="skills"
       data-skill-cards
       mix={css({
         ...windowRules,
@@ -139,7 +140,7 @@ export function SkillStickers() {
         },
       })}
     >
-      <SectionHeading id="skills-heading">Skills</SectionHeading>
+      <WindowTitleBar windowId="skills" label="Skills" title="Skills" headingId="skills-heading" />
       {groups.map((group) => (
         <fieldset key={group.label}>
           <legend>{group.label}</legend>
@@ -352,13 +353,7 @@ function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>)
         <div className="inner">
           {/* Focus starts on the title, so the window opens at the top rather
               than scrolled down to the first link inside. */}
-          <TitleBar
-            variant="dialog"
-            id={headingId}
-            label={entry.org ?? entry.title}
-            formId={formId}
-            autofocus
-          >
+          <TitleBar id={headingId} label={entry.org ?? entry.title} formId={formId} autofocus>
             {entry.org ?? entry.title}
           </TitleBar>
           <p className="when">
