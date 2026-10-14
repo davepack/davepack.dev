@@ -2,6 +2,7 @@ import type { Handle } from "remix/component";
 import { css } from "remix/component";
 
 import { Document } from "./document.tsx";
+import { GameIcon } from "./public/game-icon.tsx";
 import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
 import { MOTION_OK, PIXEL_FONT, TextLink, TitleBar, windowRules } from "./home-primitives.tsx";
 import { SkiSlope, skiRootRules } from "./home-ski.tsx";
@@ -38,6 +39,8 @@ const fontLinks = (
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
     <link rel="stylesheet" href={FONT_HREF} />
+    {/* The Remix browser runtime and the client entries it hydrates. */}
+    <script type="module" src="/js/app.js" />
   </>
 );
 
@@ -126,6 +129,7 @@ export function HomePage(handle: Handle<{ theme: Theme }>) {
       >
         <SkiSlope />
         <ThemeSwitcher theme={handle.props.theme} />
+        <GameIcon />
         <div
           className="page"
           mix={css({

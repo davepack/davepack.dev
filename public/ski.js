@@ -1178,6 +1178,10 @@ function main() {
   });
 
   pauseButton.addEventListener("click", togglePause);
+  // The desktop icon (a Remix client entry) launches the game this way.
+  addEventListener("ski:play", () => {
+    if (mode !== "play") enterPlay();
+  });
   playButton.addEventListener("click", () => (mode === "play" ? exitPlay() : enterPlay()));
 
   reduceMotion.addEventListener("change", () => {

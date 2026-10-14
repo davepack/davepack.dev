@@ -7,6 +7,12 @@
   "assets": {
     "directory": "./public",
   },
+  // Bundle the browser code (app/actions/public) into public/js before dev and
+  // deploy; wrangler dev rebuilds when anything under app/ changes.
+  "build": {
+    "command": "npm run build:client",
+    "watch_dir": "app",
+  },
   // The zone's existing proxied DNS record predates this Worker, so we bind
   // with a zone route (custom domains refuse hostnames that already have
   // externally managed records, and the OAuth token can't edit DNS).
