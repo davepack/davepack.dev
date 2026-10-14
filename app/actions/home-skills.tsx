@@ -60,10 +60,81 @@ function filterRules(groups: SkillGroup[]): Styles {
   return rules;
 }
 
+const PHONE = "@media (max-width: 600px)";
+
+// On a phone the three groups of skill buttons would take a whole screen
+// before the first card, so they become tabs there, one group at a time. The
+// tabs are radios (a separate group from the skills themselves, so a picked
+// skill stays picked while you browse), shown and hidden with :has(), like
+// the filtering. Wider screens hide the tabs and show every group.
+function tabRules(groups: SkillGroup[]): Styles {
+  let shown: Styles = {};
+  groups.forEach((_group, i) => {
+    shown[`&:has(input[name=skill-group][value="${i}"]:checked) fieldset[data-group="${i}"]`] = {
+      display: "block",
+    };
+  });
+  return {
+    "& .tabs": { display: "none" },
+    [PHONE]: {
+      "& .tabs": {
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        alignItems: "flex-end",
+        margin: "0 0 -2px",
+        overflowX: "auto",
+      },
+      "& .tab": {
+        position: "relative",
+        flex: "none",
+        marginRight: "-2px",
+        padding: "0.3rem 0.45rem",
+        color: "var(--ink-on-chrome)",
+        background: "var(--chrome)",
+        border: "2px solid var(--frame)",
+        borderBottomColor: "var(--frame)",
+        fontFamily: PIXEL_FONT,
+        fontSize: "0.75rem",
+        whiteSpace: "nowrap",
+        cursor: "pointer",
+        userSelect: "none",
+      },
+      // The open tab stands a little taller and runs into its panel.
+      "& .tab:has(:checked)": {
+        zIndex: 1,
+        paddingBottom: "0.5rem",
+        color: "var(--ink)",
+        background: "var(--card)",
+        borderBottomColor: "var(--card)",
+      },
+      "& .tab:has(:focus-visible)": { outline: "2px solid var(--accent)", outlineOffset: "-5px" },
+      "& .tab input": { position: "absolute", inset: 0, margin: 0, opacity: 0, cursor: "inherit" },
+      "& fieldset": {
+        display: "none",
+        margin: "0 0 1rem",
+        padding: "0.75rem",
+        border: "2px solid var(--frame)",
+      },
+      // The tab names the group; keep the legend for screen readers only.
+      "& legend": {
+        position: "absolute",
+        width: "1px",
+        height: "1px",
+        overflow: "hidden",
+        clipPath: "inset(50%)",
+        whiteSpace: "nowrap",
+      },
+      ...shown,
+    },
+  };
+}
+
 export function SkillStickers() {
   let groups = skillGroups();
   let entries = timeline();
   let rules = filterRules(groups);
+  let tabs = tabRules(groups);
 
   return () => (
     <section
@@ -120,6 +191,7 @@ export function SkillStickers() {
           cursor: "inherit",
         },
         // The All button sits beside the caption of whatever is picked.
+        ...tabs,
         "& .status": {
           display: "flex",
           alignItems: "flex-start",
@@ -141,8 +213,16 @@ export function SkillStickers() {
       })}
     >
       <WindowTitleBar windowId="skills" label="Skills" title="Skills" headingId="skills-heading" />
-      {groups.map((group) => (
-        <fieldset key={group.label}>
+      <div className="tabs">
+        {groups.map((group, i) => (
+          <label key={group.label} className="tab">
+            <input type="radio" name="skill-group" value={String(i)} checked={i === 0} />
+            {group.label}
+          </label>
+        ))}
+      </div>
+      {groups.map((group, i) => (
+        <fieldset key={group.label} data-group={String(i)}>
           <legend>{group.label}</legend>
           <div className="cloud">
             {group.skills.map((skill) => (
