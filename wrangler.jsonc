@@ -10,7 +10,7 @@
   // Bundle the browser code (app/actions/public) into public/js before dev and
   // deploy; wrangler dev rebuilds when anything under app/ changes.
   "build": {
-    "command": "npm run build:client",
+    "command": "node scripts/build-client.mjs",
     "watch_dir": "app",
   },
   // The zone's existing proxied DNS record predates this Worker, so we bind

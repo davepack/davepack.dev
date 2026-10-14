@@ -15,7 +15,7 @@ npm run lint
 npm run fmt
 ```
 
-The app runs on Cloudflare Workers and is server-rendered, with a few Remix client entries hydrated in the browser. There is no asset server: esbuild bundles `app/actions/public/entry.ts` and the client entries it registers into `public/js/app.js` (git-ignored), and Wrangler's `build.command` runs that before dev and deploy. Client entry IDs point at that bundle (`/js/app.js#ExportName`). Never import resume data into browser code; it would ship in the public bundle.
+The app runs on Cloudflare Workers and is server-rendered, with a few Remix client entries hydrated in the browser. There is no asset server: `scripts/build-client.mjs` uses esbuild to bundle `app/actions/public/entry.ts` and the client entries it registers into `public/js/app.js` (git-ignored), and Wrangler's `build.command` runs that before dev and deploy. Client entry IDs point at that bundle (`/js/app.js#ExportName`). Never import resume data into browser code; it would ship in the public bundle.
 
 ## Building Features
 
