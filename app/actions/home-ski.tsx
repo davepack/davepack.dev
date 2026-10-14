@@ -13,7 +13,7 @@ export const skiRootRules = {
   "&[data-mode=play] .page": { visibility: "hidden" },
 } as const;
 
-const SCRIPT_VERSION = "6";
+const SCRIPT_VERSION = "7";
 
 export function SkiSlope() {
   return () => (
@@ -59,6 +59,10 @@ export function SkiSlope() {
           },
           "& dt": { color: "var(--muted)" },
           "& dd": { margin: 0, textAlign: "right", fontVariantNumeric: "tabular-nums" },
+          // Two stats to a row on a phone, so the window covers less slope.
+          "@media (max-width: 600px)": {
+            "& dl": { gridTemplateColumns: "auto 1fr auto 1fr" },
+          },
           "& p": {
             margin: "0.5rem 0 0",
             paddingTop: "0.5rem",

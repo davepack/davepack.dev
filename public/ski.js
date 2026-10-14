@@ -734,8 +734,27 @@ function main() {
     bubble = { t: SWEAR_FOR, glyphs };
   }
 
-  function updateCamera() {
-    cam.y = player.y - H * 0.3;
+  // Where the HUD sits, in CSS px, so the play camera can keep the skier
+  // out from under it. Measured when it changes, not every frame.
+  let hudBox = null;
+  const measureHud = () => {
+    hudBox = hud.hidden ? null : hud.getBoundingClientRect();
+  };
+  let anchorY = 0;
+
+  function updateCamera(dt = Infinity) {
+    // Normally the skier rides 30% of the way down the screen. In play, if
+    // the HUD hangs over the skier's column (a phone), drop below it, easing
+    // there so the view doesn't jump when the instructions go away.
+    let want = H * 0.3;
+    if (mode === "play" && hudBox) {
+      const sx = (player.x - cam.x) * scale;
+      if (sx > hudBox.left - 24 && sx < hudBox.right + 24) {
+        want = Math.max(want, hudBox.bottom / scale + 20);
+      }
+    }
+    anchorY = approach(anchorY || want, want, 80 * dt);
+    cam.y = player.y - anchorY;
     if (mode === "play") {
       const left = cam.x + W * 0.3;
       const right = cam.x + W * 0.7;
@@ -939,13 +958,17 @@ function main() {
   function message(text, seconds = 0) {
     stats.message.textContent = text;
     messageTimer = seconds;
+    measureHud();
   }
 
   function updateHud(dt) {
     if (mode !== "play" || !run) return;
     if (messageTimer > 0) {
       messageTimer -= dt;
-      if (messageTimer <= 0) stats.message.textContent = "";
+      if (messageTimer <= 0) {
+        stats.message.textContent = "";
+        measureHud();
+      }
     }
     hudClock -= dt;
     if (hudClock > 0) return;
@@ -1029,6 +1052,7 @@ function main() {
     canvas.setAttribute("aria-hidden", "false");
     canvas.tabIndex = 0;
     hud.hidden = false;
+    measureHud();
     newRun();
     start();
     canvas.focus({ preventScroll: true });
@@ -1041,6 +1065,7 @@ function main() {
     canvas.setAttribute("aria-hidden", "true");
     canvas.tabIndex = -1;
     hud.hidden = true;
+    measureHud();
     run = null;
     beast = null;
     eaten = null;
@@ -1185,6 +1210,7 @@ function main() {
     ctx.imageSmoothingEnabled = false;
     // Start the skier off to the right, out from behind the content.
     if (firstLayout) cam.x = player.x - W * 0.78;
+    measureHud();
     updateCamera();
     draw();
   }
