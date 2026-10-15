@@ -57,19 +57,19 @@ export const pointerDrag = createMixin<HTMLElement>((handle) => {
         let { pointerId, clientX: x, clientY: y } = event;
         let drag = new AbortController();
         lifetime.addEventListener("abort", () => drag.abort(), { signal: drag.signal });
+        let move = (e: PointerEvent) => {
+          if (e.pointerId !== pointerId) return;
+          node.dispatchEvent(new PointerDragEvent(dragMoveType, e.clientX - x, e.clientY - y));
+        };
         let end = (e: PointerEvent) => {
           if (e.pointerId !== pointerId) return;
+          // Browsers batch pointermove, so the last few can be pending when
+          // the pointer is released; land exactly where it let go.
+          if (e.type === "pointerup") move(e);
           drag.abort();
           node.dispatchEvent(new PointerDragEvent(dragEndType));
         };
-        window.addEventListener(
-          "pointermove",
-          (e) => {
-            if (e.pointerId !== pointerId) return;
-            node.dispatchEvent(new PointerDragEvent(dragMoveType, e.clientX - x, e.clientY - y));
-          },
-          { signal: drag.signal },
-        );
+        window.addEventListener("pointermove", move, { signal: drag.signal });
         window.addEventListener("pointerup", end, { signal: drag.signal });
         window.addEventListener("pointercancel", end, { signal: drag.signal });
         node.dispatchEvent(new PointerDragEvent(dragStartType));
