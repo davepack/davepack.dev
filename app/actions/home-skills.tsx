@@ -62,11 +62,11 @@ function filterRules(groups: SkillGroup[]): Styles {
 
 const PHONE = "@media (max-width: 600px)";
 
-// On a phone the three groups of skill buttons would take a whole screen
-// before the first card, so they become tabs there, one group at a time. The
-// tabs are radios (a separate group from the skills themselves, so a picked
-// skill stays picked while you browse), shown and hidden with :has(), like
-// the filtering. Wider screens hide the tabs and show every group.
+// The three groups of skill buttons are tabs, one group at a time, so the
+// cards (and the filtering) sit close below them. The tabs are radios (a
+// separate group from the skills themselves, so a picked skill stays picked
+// while you browse), shown and hidden with :has(), like the filtering, so
+// they work without JavaScript.
 function tabRules(groups: SkillGroup[]): Styles {
   let shown: Styles = {};
   groups.forEach((_group, i) => {
@@ -75,57 +75,61 @@ function tabRules(groups: SkillGroup[]): Styles {
     };
   });
   return {
-    "& .tabs": { display: "none" },
+    "& .tabs": {
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      alignItems: "flex-end",
+      margin: "0 0 -2px",
+      overflowX: "auto",
+    },
+    "& .tab": {
+      position: "relative",
+      flex: "none",
+      marginRight: "-2px",
+      padding: "0.35rem 0.75rem",
+      color: "var(--ink-on-chrome)",
+      background: "var(--chrome)",
+      border: "2px solid var(--frame)",
+      fontFamily: PIXEL_FONT,
+      fontSize: "0.875rem",
+      whiteSpace: "nowrap",
+      cursor: "pointer",
+      userSelect: "none",
+    },
+    "& .tab:hover": { background: "var(--chrome-hover)" },
+    // The open tab stands a little taller and runs into its panel.
+    "& .tab:has(:checked)": {
+      zIndex: 1,
+      paddingBottom: "0.55rem",
+      color: "var(--ink)",
+      background: "var(--card)",
+      borderBottomColor: "var(--card)",
+      cursor: "default",
+    },
+    "& .tab:has(:focus-visible)": { outline: "2px solid var(--accent)", outlineOffset: "-5px" },
+    "& .tab input": { position: "absolute", inset: 0, margin: 0, opacity: 0, cursor: "inherit" },
+    "& fieldset": {
+      display: "none",
+      minWidth: 0,
+      margin: "0 0 1rem",
+      padding: "0.75rem",
+      border: "2px solid var(--frame)",
+    },
+    // The tab names the group; keep the legend for screen readers only.
+    "& legend": {
+      position: "absolute",
+      width: "1px",
+      height: "1px",
+      overflow: "hidden",
+      clipPath: "inset(50%)",
+      whiteSpace: "nowrap",
+    },
+    ...shown,
+    // Smaller tabs, so all three fit across a phone.
     [PHONE]: {
-      "& .tabs": {
-        position: "relative",
-        zIndex: 1,
-        display: "flex",
-        alignItems: "flex-end",
-        margin: "0 0 -2px",
-        overflowX: "auto",
-      },
-      "& .tab": {
-        position: "relative",
-        flex: "none",
-        marginRight: "-2px",
-        padding: "0.3rem 0.45rem",
-        color: "var(--ink-on-chrome)",
-        background: "var(--chrome)",
-        border: "2px solid var(--frame)",
-        borderBottomColor: "var(--frame)",
-        fontFamily: PIXEL_FONT,
-        fontSize: "0.75rem",
-        whiteSpace: "nowrap",
-        cursor: "pointer",
-        userSelect: "none",
-      },
-      // The open tab stands a little taller and runs into its panel.
-      "& .tab:has(:checked)": {
-        zIndex: 1,
-        paddingBottom: "0.5rem",
-        color: "var(--ink)",
-        background: "var(--card)",
-        borderBottomColor: "var(--card)",
-      },
-      "& .tab:has(:focus-visible)": { outline: "2px solid var(--accent)", outlineOffset: "-5px" },
-      "& .tab input": { position: "absolute", inset: 0, margin: 0, opacity: 0, cursor: "inherit" },
-      "& fieldset": {
-        display: "none",
-        margin: "0 0 1rem",
-        padding: "0.75rem",
-        border: "2px solid var(--frame)",
-      },
-      // The tab names the group; keep the legend for screen readers only.
-      "& legend": {
-        position: "absolute",
-        width: "1px",
-        height: "1px",
-        overflow: "hidden",
-        clipPath: "inset(50%)",
-        whiteSpace: "nowrap",
-      },
-      ...shown,
+      "& .tab": { padding: "0.3rem 0.45rem", fontSize: "0.75rem" },
+      "& .tab:has(:checked)": { paddingBottom: "0.5rem" },
     },
   };
 }
@@ -144,15 +148,6 @@ export function SkillStickers() {
       mix={css({
         ...windowRules,
         ...rules,
-        "& fieldset": { margin: "0 0 1rem", padding: 0, border: 0, minWidth: 0 },
-        "& legend": {
-          margin: "0 0 0.4rem",
-          padding: 0,
-          fontSize: "0.75rem",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "var(--muted)",
-        },
         "& .cloud": {
           display: "flex",
           flexWrap: "wrap",
