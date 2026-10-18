@@ -31,7 +31,7 @@ import { EntryBody } from "./home-work.tsx";
 import { WindowTitleBar } from "./public/window-title-bar.tsx";
 
 const ALL = "all";
-const SCRIPT_VERSION = "5";
+const SCRIPT_VERSION = "6";
 
 type Styles = Parameters<typeof css>[0];
 
@@ -39,10 +39,13 @@ type Styles = Parameters<typeof css>[0];
 // character can never break a selector or a transition name.
 const quote = (value: string) => JSON.stringify(value);
 const slug = (id: string) => id.replace(/[^a-zA-Z0-9_-]/g, "-");
+
+/** The id of an entry's detail window, which the Work rows open too. */
+export const entryWindowId = (entry: TimelineEntry) => `entry-${slug(entry.id)}`;
 const checked = (skillId: string) => `&:has(input[name=skill][value=${quote(skillId)}]:checked)`;
 
-// One set of rules per skill: hide the cards that don't use it, show its
-// caption, and mark it among the skills listed inside each card's window.
+// One set of rules per skill: hide the cards that don't use it and show its
+// caption. EntryWindows marks it inside the detail windows.
 function filterRules(groups: SkillGroup[]): Styles {
   let rules: Styles = {};
   for (let group of groups) {
@@ -50,11 +53,6 @@ function filterRules(groups: SkillGroup[]): Styles {
       let id = quote(skill.id);
       rules[`${checked(skill.id)} .card-slot:not([data-skills~=${id}])`] = { display: "none" };
       rules[`${checked(skill.id)} .cap[data-for=${id}]`] = { display: "block" };
-      rules[`${checked(skill.id)} li[data-skill=${id}] > span`] = {
-        borderColor: "var(--title)",
-        background: "var(--title)",
-        color: "var(--title-ink)",
-      };
     }
   }
   return rules;
@@ -250,7 +248,6 @@ export function SkillStickers() {
         )}
       </div>
       <Cards entries={entries} />
-      <script type="module" src={`/skills.js?v=${SCRIPT_VERSION}`} />
     </section>
   );
 }
@@ -281,87 +278,111 @@ function Card(handle: Handle<{ entry: TimelineEntry }>) {
   return () => {
     let { entry } = handle.props;
     let id = slug(entry.id);
-    let dialogId = `entry-${id}`;
 
     return (
-      <>
-        <button
-          type="button"
-          className="card"
-          commandfor={dialogId}
-          command="show-modal"
-          data-vt={`card-${id}`}
-          mix={css({
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            height: "100%",
-            padding: 0,
-            textAlign: "left",
-            font: "inherit",
-            color: "var(--ink)",
-            background: "var(--card)",
-            border: "2px solid var(--frame)",
-            boxShadow: "3px 3px 0 var(--frame)",
-            cursor: "pointer",
-            "&:hover, &:focus-visible": {
-              translate: "-2px -2px",
-              boxShadow: "5px 5px 0 var(--frame)",
-            },
-            "& .bar": {
-              display: "block",
-              padding: "0.3rem 0.6rem",
-              background: "var(--title)",
-              color: "var(--title-ink)",
-              borderBottom: "2px solid var(--frame)",
-              fontFamily: PIXEL_FONT,
-              fontSize: "0.875rem",
-              fontWeight: 600,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            },
-            // Block layout, not flex: line clamping needs its -webkit-box.
-            "& .face": { display: "block", padding: "0.6rem 0.75rem 0.75rem" },
-            "& .role": {
-              display: "block",
-              fontWeight: 600,
-              fontSize: "0.9375rem",
-              lineHeight: 1.35,
-            },
-            "& .when": {
-              display: "block",
-              marginTop: "0.15rem",
-              color: "var(--muted)",
-              fontSize: "0.8125rem",
-              fontVariantNumeric: "tabular-nums",
-            },
-            "& .blurb": {
-              display: "-webkit-box",
-              marginTop: "0.4rem",
-              overflow: "hidden",
-              color: "var(--muted)",
-              fontSize: "0.875rem",
-              lineHeight: 1.5,
-              WebkitBoxOrient: "vertical",
-              WebkitLineClamp: "3", // a string, or css() appends "px"
-            },
-            [MOTION_OK]: {
-              transition: "translate 140ms ease, box-shadow 140ms ease",
-            },
-          })}
-        >
-          <span className="bar">{entry.org ?? entry.title}</span>
-          <span className="face">
-            {entry.org ? <span className="role">{entry.title}</span> : <Chip>side project</Chip>}
-            <span className="when">{formatRange(entry.start, entry.end, entry.current)}</span>
-            <span className="blurb">{entry.summary}</span>
-          </span>
-        </button>
-        <EntryWindow entry={entry} dialogId={dialogId} />
-      </>
+      <button
+        type="button"
+        className="card"
+        commandfor={entryWindowId(entry)}
+        command="show-modal"
+        data-vt={`card-${id}`}
+        mix={css({
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "100%",
+          padding: 0,
+          textAlign: "left",
+          font: "inherit",
+          color: "var(--ink)",
+          background: "var(--card)",
+          border: "2px solid var(--frame)",
+          boxShadow: "3px 3px 0 var(--frame)",
+          cursor: "pointer",
+          "&:hover, &:focus-visible": {
+            translate: "-2px -2px",
+            boxShadow: "5px 5px 0 var(--frame)",
+          },
+          "& .bar": {
+            display: "block",
+            padding: "0.3rem 0.6rem",
+            background: "var(--title)",
+            color: "var(--title-ink)",
+            borderBottom: "2px solid var(--frame)",
+            fontFamily: PIXEL_FONT,
+            fontSize: "0.875rem",
+            fontWeight: 600,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          },
+          // Block layout, not flex: line clamping needs its -webkit-box.
+          "& .face": { display: "block", padding: "0.6rem 0.75rem 0.75rem" },
+          "& .role": {
+            display: "block",
+            fontWeight: 600,
+            fontSize: "0.9375rem",
+            lineHeight: 1.35,
+          },
+          "& .when": {
+            display: "block",
+            marginTop: "0.15rem",
+            color: "var(--muted)",
+            fontSize: "0.8125rem",
+            fontVariantNumeric: "tabular-nums",
+          },
+          "& .blurb": {
+            display: "-webkit-box",
+            marginTop: "0.4rem",
+            overflow: "hidden",
+            color: "var(--muted)",
+            fontSize: "0.875rem",
+            lineHeight: 1.5,
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: "3", // a string, or css() appends "px"
+          },
+          [MOTION_OK]: {
+            transition: "translate 140ms ease, box-shadow 140ms ease",
+          },
+        })}
+      >
+        <span className="bar">{entry.org ?? entry.title}</span>
+        <span className="face">
+          {entry.org ? <span className="role">{entry.title}</span> : <Chip>side project</Chip>}
+          <span className="when">{formatRange(entry.start, entry.end, entry.current)}</span>
+          <span className="blurb">{entry.summary}</span>
+        </span>
+      </button>
     );
   };
+}
+
+// The detail window for every job and project. They live outside the page
+// windows, so the Work rows and the skill cards can open them whether or not
+// the other window is open, and while a skill is picked it's marked among
+// the skills each one lists.
+export function EntryWindows() {
+  let entries = timeline();
+  let marks: Styles = {};
+  for (let group of skillGroups()) {
+    for (let skill of group.skills) {
+      let id = quote(skill.id);
+      marks[`:root:has(input[name=skill][value=${id}]:checked) & li[data-skill=${id}] > span`] = {
+        borderColor: "var(--title)",
+        background: "var(--title)",
+        color: "var(--title-ink)",
+      };
+    }
+  }
+
+  return () => (
+    <div data-entry-windows mix={css(marks)}>
+      {entries.map((entry) => (
+        <EntryWindow key={entry.id} entry={entry} dialogId={entryWindowId(entry)} />
+      ))}
+      <script type="module" src={`/skills.js?v=${SCRIPT_VERSION}`} />
+    </div>
+  );
 }
 
 function EntryWindow(handle: Handle<{ entry: TimelineEntry; dialogId: string }>) {

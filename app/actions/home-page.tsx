@@ -7,7 +7,7 @@ import { WindowTitleBar } from "./public/window-title-bar.tsx";
 import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
 import { MOTION_OK, PIXEL_FONT, TextLink, windowRules } from "./home-primitives.tsx";
 import { SkiSlope, skiRootRules } from "./home-ski.tsx";
-import { SkillStickers } from "./home-skills.tsx";
+import { EntryWindows, SkillStickers } from "./home-skills.tsx";
 import { ThemeSwitcher, themeRules, type Theme } from "./home-theme.tsx";
 import { WorkTimeline } from "./home-work.tsx";
 
@@ -176,6 +176,7 @@ export function HomePage(handle: Handle<{ theme: Theme }>) {
           <SkillStickers />
           <Footer />
         </div>
+        <EntryWindows />
       </main>
     </Document>
   );

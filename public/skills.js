@@ -1,10 +1,12 @@
-// Motion for the skills section. Picking a skill slides the remaining job and
-// project cards into place, and opening a card grows it into its window. The
-// section already works without this script (CSS filtering, native dialogs);
-// this adds view transitions, a fallback for browsers without invoker
-// commands, closing a window by clicking outside it, and the scroll lock.
+// Motion for the skills section and the job and project detail windows.
+// Picking a skill slides the remaining cards into place, and opening a skill
+// card or a Work row grows it into its detail window. It all works without
+// this script (CSS filtering, native dialogs opened by invoker commands); this
+// adds view transitions, a fallback for browsers without invoker commands,
+// closing a window by clicking outside it, and the scroll lock.
 
 const section = document.querySelector("[data-skill-cards]");
+const windows = document.querySelector("[data-entry-windows]");
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
 // Elements only carry a view-transition-name while they take part in a
@@ -42,8 +44,9 @@ const lockScroll = (locked) => {
   document.documentElement.toggleAttribute("data-window-open", locked);
 };
 
-if (section) {
+if (section && windows) {
   const cards = [...section.querySelectorAll("button[commandfor]")];
+  const openers = [...document.querySelectorAll("button[commandfor][data-vt]")];
 
   // ---- Filtering ---------------------------------------------------------
 
@@ -71,13 +74,18 @@ if (section) {
 
   // ---- Windows -----------------------------------------------------------
 
-  const cardFor = (dialog) => section.querySelector(`button[commandfor="${dialog.id}"]`);
+  // Whichever opened a window (a card or a Work row) is where it shrinks
+  // back to; failing that, the window's skill card.
+  const openedBy = new WeakMap();
+  const cardFor = (dialog) =>
+    openedBy.get(dialog) ?? section.querySelector(`button[commandfor="${dialog.id}"]`);
   let closing = false;
 
-  // The card and its window share one name, handed from one to the other
-  // inside the transition; that hand-off is what makes the card grow.
+  // The opener and its window share one name, handed from one to the other
+  // inside the transition; that hand-off is what makes the opener grow.
   function open(card, dialog) {
-    for (const other of cards) setName(other);
+    openedBy.set(dialog, card);
+    for (const other of openers) setName(other);
     setName(card, card.dataset.vt);
     transition(
       () => {
@@ -110,11 +118,11 @@ if (section) {
     );
   }
 
-  section.addEventListener("click", (event) => {
+  document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
 
-    const card = target.closest("button[commandfor]");
+    const card = target.closest("button[commandfor][data-vt]");
     if (card) {
       const dialog = document.getElementById(card.getAttribute("commandfor"));
       if (dialog instanceof HTMLDialogElement && !dialog.open) {
@@ -124,6 +132,7 @@ if (section) {
       return;
     }
 
+    if (!windows.contains(target)) return;
     const closeButton = target.closest("[data-close]");
     if (closeButton) {
       event.preventDefault();
@@ -136,7 +145,7 @@ if (section) {
     if (target instanceof HTMLDialogElement && target.open) close(target);
   });
 
-  for (const dialog of section.querySelectorAll("dialog")) {
+  for (const dialog of windows.querySelectorAll("dialog")) {
     dialog.addEventListener("cancel", (event) => {
       event.preventDefault();
       close(dialog);

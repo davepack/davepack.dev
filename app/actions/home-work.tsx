@@ -1,5 +1,7 @@
-// Work timeline: one native <details> per role, newest first, with side
-// projects at the end. Everything comes from app/data/resume.ts.
+// Work timeline: a compact list of roles, newest first, with side projects at
+// the end. Each row opens that entry's detail window (the same one the skill
+// cards open), so the details live in one place. Everything comes from
+// app/data/resume.ts.
 
 import type { Handle } from "remix/component";
 import { css } from "remix/component";
@@ -19,6 +21,7 @@ import {
   detailsHeightRules,
   windowRules,
 } from "./home-primitives.tsx";
+import { entryWindowId } from "./home-skills.tsx";
 import { WindowTitleBar } from "./public/window-title-bar.tsx";
 
 export function WorkTimeline() {
@@ -34,8 +37,7 @@ export function WorkTimeline() {
           padding: 0,
           display: "flex",
           flexDirection: "column",
-          gap: "0.25rem",
-          interpolateSize: "allow-keywords",
+          gap: "0.125rem",
         })}
       >
         {entries.map((entry) => (
@@ -61,26 +63,44 @@ function Entry(handle: Handle<{ entry: TimelineEntry }>) {
     let { entry } = handle.props;
     let heading = entry.org ?? entry.title;
     let role = entry.org ? entry.title : null;
+    let dialogId = entryWindowId(entry);
 
     return (
-      <details
+      <button
+        type="button"
+        commandfor={dialogId}
+        command="show-modal"
+        aria-haspopup="dialog"
+        data-vt={`work-${dialogId}`}
         data-compact={entry.featured ? undefined : ""}
         mix={css({
-          ...chevronRules,
-          ...detailsHeightRules,
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "baseline",
+          gap: "0.25rem 0.6rem",
+          width: "calc(100% + 1.5rem)",
+          padding: "0.55rem 0.75rem",
+          margin: "0 -0.75rem",
+          border: 0,
+          textAlign: "left",
+          font: "inherit",
+          color: "var(--ink)",
+          background: "none",
+          cursor: "pointer",
           "&[data-compact]": { fontSize: "0.9375rem", color: "var(--muted)" },
-          "& > summary": {
-            listStyle: "none",
-            cursor: "pointer",
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "baseline",
-            gap: "0.25rem 0.6rem",
-            padding: "0.55rem 0.75rem",
-            margin: "0 -0.75rem",
+          "&:hover": { background: "var(--tint)" },
+          "&:focus-visible": { outlineOffset: "-2px" },
+          // A small window glyph: this opens a window.
+          "&::before": {
+            content: '""',
+            flex: "none",
+            alignSelf: "center",
+            width: "0.6rem",
+            height: "0.5rem",
+            border: "1.5px solid var(--hot)",
+            borderTopWidth: "3px",
           },
-          "& > summary:hover": { background: "var(--tint)" },
-          "& h3": { margin: 0, fontSize: "1rem", fontWeight: 600 },
+          "& .org": { fontWeight: 600 },
           "& .role": { color: "var(--muted)" },
           "& .when": {
             marginLeft: "auto",
@@ -89,31 +109,36 @@ function Entry(handle: Handle<{ entry: TimelineEntry }>) {
             fontVariantNumeric: "tabular-nums",
             whiteSpace: "nowrap",
           },
-          "& > .body": { padding: "0.25rem 0 1rem 1.05rem" },
-          [MOTION_OK]: {
-            "& > summary::before": { transition: "rotate 200ms steps(3)" },
-            "&[open] > .body": { animation: "dp-reveal 260ms ease-out" },
-          },
-          "@keyframes dp-reveal": {
-            from: { opacity: 0, transform: "translateY(-4px)" },
-            to: { opacity: 1, transform: "none" },
+          // On a phone: company and dates on one line, the role under them.
+          "@media (max-width: 600px)": {
+            display: "grid",
+            gridTemplateColumns: "auto 1fr auto",
+            gridTemplateAreas: '"icon org when" ". role role"',
+            columnGap: "0.6rem",
+            rowGap: "0.1rem",
+            "&::before": { gridArea: "icon", alignSelf: "start", marginTop: "0.5em" },
+            "& .org": { gridArea: "org" },
+            "& .when": { gridArea: "when", fontSize: "0.8125rem" },
+            "& .role, & .role-chip": { gridArea: "role", justifySelf: "start" },
+            "& .role": { fontSize: "0.9375rem", lineHeight: 1.4 },
           },
         })}
       >
-        <summary>
-          <h3>{heading}</h3>
-          {role ? <span className="role">{role}</span> : null}
-          {entry.kind === "project" ? <Chip>side project</Chip> : null}
-          <span className="when">{formatRange(entry.start, entry.end, entry.current)}</span>
-        </summary>
-        <EntryBody entry={entry} />
-      </details>
+        <span className="org">{heading}</span>
+        {role ? <span className="role">{role}</span> : null}
+        {entry.kind === "project" ? (
+          <span className="role-chip">
+            <Chip>side project</Chip>
+          </span>
+        ) : null}
+        <span className="when">{formatRange(entry.start, entry.end, entry.current)}</span>
+      </button>
     );
   };
 }
 
 // The details of one job or project: summary, highlights, skills, link, and
-// stories. Shared by the Work timeline and the skill cards' windows.
+// stories, shown in its detail window.
 export function EntryBody(handle: Handle<{ entry: TimelineEntry }>) {
   return () => {
     let { entry } = handle.props;
