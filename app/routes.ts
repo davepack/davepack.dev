@@ -1,5 +1,6 @@
-import { route } from "remix/routes";
+import { post, route } from "remix/routes";
 
 export const routes = route({
   home: "/",
+  events: post("/events"),
 });

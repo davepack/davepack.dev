@@ -8,6 +8,7 @@
 
 import { run } from "remix/component";
 
+import { startAnalytics } from "./analytics.ts";
 import { setFlush } from "./desktop-dom.ts";
 import { DesktopIcons } from "./desktop-icons.tsx";
 import { WindowTitleBar } from "./window-title-bar.tsx";
@@ -30,5 +31,7 @@ setFlush(() => app.flush());
 app.addEventListener("error", (event) => {
   console.error("Component error:", event.error);
 });
+
+startAnalytics();
 
 await app.ready();

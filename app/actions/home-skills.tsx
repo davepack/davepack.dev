@@ -31,7 +31,7 @@ import { EntryBody } from "./home-work.tsx";
 import { WindowTitleBar } from "./public/window-title-bar.tsx";
 
 const ALL = "all";
-const SCRIPT_VERSION = "6";
+const SCRIPT_VERSION = "7";
 
 type Styles = Parameters<typeof css>[0];
 

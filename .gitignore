@@ -5,3 +5,7 @@ tmp/
 .wrangler/
 # Built by `npm run build:client`
 public/js/
+# Local secrets (.env.events holds the analytics read token)
+.env
+.env.*
+.dev.vars

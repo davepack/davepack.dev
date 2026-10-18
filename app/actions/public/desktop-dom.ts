@@ -4,6 +4,7 @@
 //
 // Everything here runs in the browser only, from event handlers and tasks.
 
+import { track } from "./analytics.ts";
 import { desktop, type Position } from "./desktop-model.ts";
 import { DRAG_MEDIA } from "./drag.tsx";
 
@@ -117,6 +118,7 @@ const nameFor = (id: string) => `window-${id}`;
 export function closeWindow(id: string) {
   let el = windowElement(id);
   if (!el || !desktop.isOpen(id)) return;
+  track("window", { label: `${id}:minimize` });
   el.style.viewTransitionName = nameFor(id);
   transition(
     () => {
@@ -139,6 +141,7 @@ export function closeWindow(id: string) {
 export function openWindow(id: string) {
   let icon = iconElement(id);
   if (desktop.isOpen(id)) return;
+  track("window", { label: `${id}:open` });
   if (icon) icon.style.viewTransitionName = nameFor(id);
   transition(
     () => {

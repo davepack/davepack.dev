@@ -109,7 +109,7 @@ export function ThemeSwitcher(handle: Handle<{ theme: Theme }>) {
           {option.label}
         </label>
       ))}
-      <script type="module" src="/theme.js?v=2" />
+      <script type="module" src="/theme.js?v=3" />
     </fieldset>
   );
 }

@@ -24,8 +24,9 @@ import {
   pinWindows,
   unpinOnNarrowScreens,
 } from "./desktop-dom.ts";
+import { track } from "./analytics.ts";
 import { desktop, type Position } from "./desktop-model.ts";
-import { DRAG_MEDIA, dragMoveType, dragStartType, pointerDrag } from "./drag.tsx";
+import { DRAG_MEDIA, dragEndType, dragMoveType, dragStartType, pointerDrag } from "./drag.tsx";
 
 interface WindowTitleBarProps {
   /** Matches the data-window attribute on the window element. */
@@ -107,6 +108,13 @@ export const WindowTitleBar = clientEntry(
           }),
           on(dragMoveType, (event) => {
             if (dragFrom) moveTo({ x: dragFrom.x + event.dx, y: dragFrom.y + event.dy });
+          }),
+          on(dragEndType, () => {
+            let to = desktop.position(id);
+            if (dragFrom && to && (to.x !== dragFrom.x || to.y !== dragFrom.y)) {
+              track("window", { label: `${id}:move` });
+            }
+            dragFrom = null;
           }),
           on("keydown", (event) => {
             if (!moving) return;

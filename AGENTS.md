@@ -10,6 +10,7 @@ npm run dev        # wrangler dev at http://localhost:8787 (builds the client bu
 npm run deploy     # also builds the client bundle first
 npm run build:client
 npm test           # node --test over app/**/*.test.ts
+npm run events     # summarize interaction events; reads .env.events (never .env, which Wrangler would use for deploys)
 npm run typecheck
 npm run lint
 npm run fmt
@@ -30,6 +31,7 @@ Refer to ./.agents/skills/remix/SKILL.md for the Remix mental model and how to f
 - `app/middleware/render.tsx` installs the request-scoped renderer used by actions
 - `app/data/resume.ts` is the only module that reads `data/davepack-resume.json`. It never exposes `profile` and drops any entry marked `verify: true`, so clear that flag in the JSON to publish an entry
 - `app/actions/home-*.tsx` are the home route's sections (work timeline, skill stickers, flourishes, shared primitives)
+- `app/actions/events.ts` validates the interaction events the page beacons to `POST /events` and writes them to Workers Analytics Engine (binding `EVENTS`, dataset `davepack_events`); `app/actions/public/analytics.ts` sends them. No cookies or identifiers, and visitors with Global Privacy Control or Do Not Track are skipped. The plain scripts report through a `dp:track` window event
 - `app/actions/public/` is browser code: `entry.ts` (starts the runtime with `run()`), the desktop model, and the client entries (window title bars, desktop icons)
 - Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets, including the plain scripts `ski.js`, `skills.js`, and `theme.js`
 

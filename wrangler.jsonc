@@ -17,6 +17,8 @@
   // with a zone route (custom domains refuse hostnames that already have
   // externally managed records, and the OAuth token can't edit DNS).
   "routes": [{ "pattern": "davepack.dev/*", "zone_name": "davepack.dev" }],
+  // Interaction events from the page (app/actions/events.ts).
+  "analytics_engine_datasets": [{ "binding": "EVENTS", "dataset": "davepack_events" }],
   "observability": {
     "enabled": true,
   },

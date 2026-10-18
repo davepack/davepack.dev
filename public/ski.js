@@ -27,6 +27,10 @@ const SWEAR_FOR = 2.2;
 // only uncovered strip is the page gutter, about 8 world px wide.
 const EDGE = 4;
 
+// Analytics: picked up by app/actions/public/analytics.ts, if it's loaded.
+const track = (name, fields = {}) =>
+  dispatchEvent(new CustomEvent("dp:track", { detail: { name, ...fields } }));
+
 const SAVE_PAUSED = "ski:paused";
 const SAVE_BEST = "ski:best";
 
@@ -985,6 +989,7 @@ function main() {
   function finishRun() {
     run.over = true;
     const meters = run.meters ?? 0;
+    track("game-over", { value: meters });
     if (meters > best) {
       best = meters;
       save(SAVE_BEST, String(best));
@@ -1032,6 +1037,7 @@ function main() {
   }
 
   function newRun() {
+    track("game-start");
     run = { startY: player.y, time: 0, caught: false, caughtTime: 0, over: false, meters: 0 };
     beast = null;
     eaten = null;

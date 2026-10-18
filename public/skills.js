@@ -5,6 +5,10 @@
 // adds view transitions, a fallback for browsers without invoker commands,
 // closing a window by clicking outside it, and the scroll lock.
 
+// Analytics: picked up by app/actions/public/analytics.ts, if it's loaded.
+const track = (name, fields = {}) =>
+  dispatchEvent(new CustomEvent("dp:track", { detail: { name, ...fields } }));
+
 const section = document.querySelector("[data-skill-cards]");
 const windows = document.querySelector("[data-entry-windows]");
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -57,6 +61,7 @@ if (section && windows) {
     if (!(input instanceof HTMLInputElement) || input.name !== "skill") return;
     const previous = current;
     current = input;
+    if (input.value !== "all" && input !== previous) track("skill", { label: input.value });
     if (!previous || previous === input) return;
     // The browser has already switched radios. Switch back for a moment so
     // the transition can capture the old layout, then switch again inside it.
@@ -85,6 +90,10 @@ if (section && windows) {
   // inside the transition; that hand-off is what makes the opener grow.
   function open(card, dialog) {
     openedBy.set(dialog, card);
+    track("entry-open", {
+      label: dialog.id.replace(/^entry-/, ""),
+      from: section.contains(card) ? "card" : "work",
+    });
     for (const other of openers) setName(other);
     setName(card, card.dataset.vt);
     transition(

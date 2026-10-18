@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "build:client": "node scripts/build-client.mjs",
+    "events": "node --env-file-if-exists=.env.events scripts/events.mjs",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "node --test 'app/**/*.test.ts'",
