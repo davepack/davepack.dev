@@ -10,13 +10,7 @@
       "featured": "Skills and entries with `featured: false` are historical or minor; include for completeness (search, timeline) but keep out of the headline views.",
       "verify": "Fields marked `\"verify\": true` or values of null are inferred or unknown and should be confirmed by Dave before publishing."
     },
-    "todo": [
-      "profile.links.github: confirm repo URL for the budgeting app (projects[0].links.repo).",
-      "skills: `typescript.yearsInProduction` and `sql.yearsInProduction` are null; fill in.",
-      "experience[kroger].teamMoves: dates of the two team moves are unknown; add if you want a timeline.",
-      "experience[student-web-dev]: employer name(s) for the 2011–2015 student role are unknown.",
-      "Decide whether to publish legacy skills (mongodb, firebase, realm, meteor, angularjs, jquery, lamp). They are included with featured:false because this file is meant to be exhaustive; they were deliberately left off the one-page resume."
-    ]
+    "updatedAt": "2026-10-18"
   },
 
   "profile": {
@@ -78,7 +72,6 @@
       "current": true,
       "proficiency": 4,
       "featured": true,
-      "verify": true,
       "summary": "Primary language for current front-end and Node work, including the React Router 7 migration and the budgeting app.",
       "related": ["javascript", "react", "node"]
     },
@@ -95,6 +88,18 @@
       "related": ["react-router", "redux", "react-native", "typescript"]
     },
     {
+      "id": "redux",
+      "name": "Redux",
+      "category": "frontend",
+      "yearsInProduction": 8,
+      "firstUsed": "2018",
+      "current": true,
+      "proficiency": 4,
+      "featured": true,
+      "summary": "State management in Kroger's e-commerce codebase.",
+      "related": ["react"]
+    },
+    {
       "id": "react-router",
       "name": "React Router",
       "category": "frontend",
@@ -108,16 +113,40 @@
       "related": ["react", "ssr", "legacy-modernization"]
     },
     {
-      "id": "redux",
-      "name": "Redux",
+      "id": "remix",
+      "name": "Remix 3",
+      "category": "frontend",
+      "yearsInProduction": null,
+      "firstUsed": "2026",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "Server-rendered apps on Remix 3 (the post-React Remix), including client entries, mixins, and Cloudflare Workers deployment.",
+      "related": ["react-router", "ssr", "cloudflare"]
+    },
+    {
+      "id": "vite",
+      "name": "Vite",
+      "category": "frontend",
+      "yearsInProduction": null,
+      "firstUsed": "2023",
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "The build and dev server under React Router 7 and Remix apps since 2023, and Vite+ for monorepo linting and formatting.",
+      "related": ["react-router", "vitest"]
+    },
+    {
+      "id": "webpack",
+      "name": "Webpack",
       "category": "frontend",
       "yearsInProduction": 8,
       "firstUsed": "2018",
       "current": true,
-      "proficiency": 4,
-      "featured": false,
-      "summary": "State management in Kroger's e-commerce codebase.",
-      "related": ["react"]
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Build tooling for Kroger's large server-rendered React codebase.",
+      "related": ["vite", "ssr"]
     },
     {
       "id": "ssr",
@@ -202,6 +231,18 @@
       "featured": true,
       "summary": "Schema, migrations, and typed queries for the budgeting app's SQL data layer.",
       "related": ["sql", "typescript"]
+    },
+    {
+      "id": "sqlite",
+      "name": "SQLite",
+      "category": "data",
+      "yearsInProduction": null,
+      "firstUsed": "2023",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "SQLite as the primary database for self-hosted apps (via Prisma) and inside Durable Objects.",
+      "related": ["sql", "prisma"]
     },
     {
       "id": "react-native",
@@ -289,6 +330,18 @@
       "related": ["node"]
     },
     {
+      "id": "docker",
+      "name": "Docker",
+      "category": "cloud",
+      "yearsInProduction": null,
+      "firstUsed": "2023",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "Containerized deploys: Docker Compose on self-hosted hardware behind a Cloudflare Tunnel, and Fly.io.",
+      "related": ["cloudflare"]
+    },
+    {
       "id": "playwright",
       "name": "Playwright",
       "category": "testing",
@@ -296,9 +349,32 @@
       "current": true,
       "proficiency": 4,
       "featured": true,
-      "verify": true,
       "summary": "UI test runner for Kroger's e-commerce app, backed by shared mocking infrastructure.",
       "related": ["msw", "testing-standards"]
+    },
+    {
+      "id": "vitest",
+      "name": "Vitest",
+      "category": "testing",
+      "yearsInProduction": null,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "Unit and integration tests against real SQLite, Workers runtime tests, and deterministic simulation tests.",
+      "related": ["playwright", "testing-standards"]
+    },
+    {
+      "id": "github-actions",
+      "name": "GitHub Actions",
+      "category": "testing",
+      "yearsInProduction": null,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "CI for typechecking, linting, tests, generated-code freshness, Swift package tests, and EAS Update previews.",
+      "related": ["testing-standards"]
     },
     {
       "id": "msw",
@@ -338,6 +414,30 @@
       "related": ["react-router", "legacy-modernization"]
     },
     {
+      "id": "mcp",
+      "name": "Model Context Protocol (MCP)",
+      "category": "ai",
+      "yearsInProduction": null,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "Builds MCP servers that let Claude work inside an app's data, with OAuth 2.1 authorization, on Node and on Cloudflare Workers.",
+      "related": ["ai-native-development", "llm-integration"]
+    },
+    {
+      "id": "llm-integration",
+      "name": "LLM integration",
+      "category": "ai",
+      "yearsInProduction": null,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 2,
+      "featured": true,
+      "summary": "Puts Claude to work inside products: generating email-parsing rules with Claude Haiku via the Anthropic API, and summarizing transcripts through the Claude CLI.",
+      "related": ["mcp", "ai-native-development"]
+    },
+    {
       "id": "architecture",
       "name": "Software Architecture & ADRs",
       "category": "practice",
@@ -360,6 +460,18 @@
       "featured": true,
       "summary": "Leads a standards board defining code-quality and testing standards adopted by all contributing teams, rolled out through pairing rather than mandate.",
       "related": ["architecture", "testing-standards"]
+    },
+    {
+      "id": "agile-scrum",
+      "name": "Agile & Scrum",
+      "category": "practice",
+      "yearsInProduction": 9,
+      "firstUsed": "2015",
+      "current": true,
+      "proficiency": 3,
+      "featured": true,
+      "summary": "Delivering in Scrum teams since the FamilySearch internship in 2015, and across eight years of Kroger's multi-team e-commerce work.",
+      "related": ["cross-team-collaboration", "technical-leadership"]
     },
     {
       "id": "performance",
@@ -572,6 +684,30 @@
       "legacy": true,
       "summary": "Server-side stack for student web development work, 2011–2015.",
       "related": ["sql"]
+    },
+    {
+      "id": "trpc",
+      "name": "tRPC",
+      "category": "backend",
+      "yearsInProduction": null,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 2,
+      "featured": false,
+      "summary": "Typed API layer between a React Router server and web, Expo, and native iOS clients, with generated types checked in CI.",
+      "related": ["typescript", "react-router"]
+    },
+    {
+      "id": "webauthn",
+      "name": "Passkeys (WebAuthn)",
+      "category": "backend",
+      "yearsInProduction": null,
+      "firstUsed": "2025",
+      "current": true,
+      "proficiency": 2,
+      "featured": false,
+      "summary": "Passkey sign-in for multi-user apps.",
+      "related": ["node"]
     }
   ],
 
@@ -616,6 +752,7 @@
         { "skillId": "redux", "usage": "Application state management across a codebase touched by 20+ teams; set and reviewed patterns for how teams use it." },
         { "skillId": "react-router", "usage": "Maintained a legacy React Router v5 app with a home-built, partially config-based routing layer, and is now leading its migration directly to React Router 7 framework mode, skipping the compat package and v6 entirely." },
         { "skillId": "ssr", "usage": "Owns a home-built server-side rendering server for the site and is migrating it to React Router 7 framework mode SSR." },
+        { "skillId": "webpack", "usage": "Client and server bundles for the e-commerce application." },
         { "skillId": "node", "usage": "Back-end services and the SSR server behind the e-commerce front-end; full-stack feature work end-to-end." },
         { "skillId": "rest-api-design", "usage": "Designs and consumes the HTTP APIs between the React front-end and Node services for full-stack features." },
         { "skillId": "ux", "usage": "Brings user empathy and UX knowledge to platform decisions and feature work: prototyping, user testing, and attention to the details of the shopping experience." },
@@ -632,7 +769,8 @@
         { "skillId": "ai-native-development", "usage": "Uses Claude Code daily. On the React Router migration, AI exploration surfaced a path that skips two intermediate versions and a large amount of throwaway code; AI now accelerates the implementation, and the workflow evolves with every prompt." },
         { "skillId": "technical-leadership", "usage": "Tech lead from the first year; leads a four-developer platform team and sets direction for 20+ contributing teams without formal authority over them." },
         { "skillId": "mentoring", "usage": "Spent tech-lead time preparing teammates to lead. Twice moved to a new team and left behind an engineer who stepped into the tech lead role." },
-        { "skillId": "cross-team-collaboration", "usage": "Facilitates communication and standards across 20+ teams contributing to one codebase; partners with QA, product, and design as peers." }
+        { "skillId": "cross-team-collaboration", "usage": "Facilitates communication and standards across 20+ teams contributing to one codebase; partners with QA, product, and design as peers." },
+        { "skillId": "agile-scrum", "usage": "Agile delivery in Scrum teams across a codebase shared by 20+ teams." }
       ],
       "stories": ["react-router-migration", "tech-lead-succession"]
     },
@@ -737,7 +875,8 @@
       "skills": [
         { "skillId": "angularjs", "usage": "Front-end development on the site's search feature with AngularJS 1.x." },
         { "skillId": "javascript", "usage": "First professional JavaScript role on a large, high-traffic public website." },
-        { "skillId": "css", "usage": "UI work on the search experience." }
+        { "skillId": "css", "usage": "UI work on the search experience." },
+        { "skillId": "agile-scrum", "usage": "Worked in Scrum sprints as part of a product team." }
       ],
       "stories": []
     },
@@ -772,10 +911,10 @@
     {
       "id": "budgeting-app",
       "name": "Budgeting App",
-      "tagline": "Full-stack web + mobile budgeting app, designed and built end-to-end, largely with AI-native development.",
+      "tagline": "Full-stack envelope-budgeting app with web, iOS, and Claude (MCP) clients, built end to end, largely with AI-native development.",
       "type": "personal",
       "status": "active",
-      "start": "2025",
+      "start": "2025-10",
       "end": null,
       "current": true,
       "featured": true,
@@ -783,27 +922,126 @@
         "repo": null,
         "live": null
       },
-      "summary": "A greenfield, solo, full-stack budgeting app with a server-rendered web client on React Router 7 framework mode, a React Native + Expo mobile client, a SQL data layer via Prisma ORM, and a shadcn/ui + Tailwind interface. Infrastructure runs on Cloudflare, using DNS, Email Workers, and Tunnels to enable remote development. Built largely with Claude Code.",
+      "summary": "A household envelope-budgeting app, built solo and largely with Claude Code. A server-rendered React Router 7 app on Prisma and SQLite serves a tRPC API to an Expo mobile client and the native SwiftUI iOS app replacing it, plus an MCP server so Claude can manage the budget directly. Self-hosted with Docker behind a Cloudflare Tunnel; bank alert emails flow in through a Cloudflare Email Worker and Claude-generated parsing rules.",
       "highlights": [
-        "Web client: React Router 7 framework mode with SSR.",
-        "Mobile client: React Native + Expo.",
-        "Data: SQL via Prisma ORM.",
-        "UI: shadcn/ui + Tailwind.",
-        "Infrastructure: Cloudflare DNS, Email Workers, and Tunnels for remote development.",
-        "Built largely with AI-native development; the commit history shows the workflow."
+        "Envelope ledger with income-timeline allocations, spending plans, recurring and planned transactions, transfer matching, and multi-user households with invites.",
+        "MCP server with about 47 tools and an OAuth 2.1 provider, so Claude can categorize, allocate, and plan inside the budget.",
+        "Bank alert emails arrive through Cloudflare Email Routing and an Email Worker; Claude Haiku generates and refines the parsing rules, with per-user AI usage limits.",
+        "Native SwiftUI iOS app (Swift packages, generated models and design tokens) replacing the Expo client; a Remix 3 port of the web app in progress.",
+        "tRPC API with generated types and fixtures shared by every client; CI fails on stale generated code.",
+        "Passkey sign-in, Prisma on SQLite (40 models, 60+ migrations), Vitest against real SQLite, and Playwright end-to-end tests in GitHub Actions.",
+        "About 60% of 600+ commits co-authored with Claude Code, driven by written plans and root-cause write-ups."
       ],
       "skills": [
         { "skillId": "react-router", "usage": "Server-rendered web client on React Router 7 framework mode (the Remix lineage), the same target as the migration at Kroger." },
         { "skillId": "ssr", "usage": "Framework-mode SSR for the web client." },
-        { "skillId": "react-native", "usage": "Mobile client sharing the app's data layer." },
-        { "skillId": "expo", "usage": "Toolchain and runtime for the mobile client." },
+        { "skillId": "react-native", "usage": "Expo mobile client, now being replaced by a native SwiftUI app." },
+        { "skillId": "expo", "usage": "Toolchain, builds, and runtime for the Expo mobile client." },
         { "skillId": "prisma", "usage": "Schema, migrations, and typed queries for the SQL data layer." },
-        { "skillId": "sql", "usage": "Relational data model for accounts, transactions, and budgets." },
+        { "skillId": "sql", "usage": "Relational model for households, accounts, transactions, envelopes, and plans." },
         { "skillId": "shadcn-ui", "usage": "Component foundation for the web interface." },
         { "skillId": "tailwind", "usage": "Styling for the web interface." },
-        { "skillId": "cloudflare", "usage": "DNS, Email Workers, and Tunnels; Tunnels expose the dev environment securely for remote development." },
+        { "skillId": "cloudflare", "usage": "Email Routing and an Email Worker for transaction emails; a Cloudflare Tunnel exposes the self-hosted app and the dev environment." },
         { "skillId": "ai-native-development", "usage": "Built largely with Claude Code from the first commit: specs, implementation, review, and tests." },
-        { "skillId": "typescript", "usage": "Language across web, mobile, and data layers." }
+        { "skillId": "typescript", "usage": "Language across web, mobile, and data layers." },
+        { "skillId": "mcp", "usage": "MCP server with about 47 tools and an OAuth 2.1 provider for Claude." },
+        { "skillId": "llm-integration", "usage": "Claude Haiku via the Anthropic API generates and refines email-parsing rules." },
+        { "skillId": "trpc", "usage": "Typed API for the web, Expo, and native iOS clients." },
+        { "skillId": "remix", "usage": "Remix 3 port of the web app on the same database." },
+        { "skillId": "sqlite", "usage": "Primary database, via Prisma." },
+        { "skillId": "webauthn", "usage": "Passkey sign-in for household members." },
+        { "skillId": "docker", "usage": "Docker Compose deploy on self-hosted hardware." },
+        { "skillId": "vitest", "usage": "Unit and integration tests against real SQLite." },
+        { "skillId": "playwright", "usage": "End-to-end tests and an automated bank-data collector." },
+        { "skillId": "github-actions", "usage": "CI for typecheck, lint, tests, generated-code freshness, and the Swift packages." },
+        { "skillId": "vite", "usage": "Build and dev server for the React Router 7 app, with Vite+ for workspace linting and formatting." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "davepack-dev",
+      "name": "davepack.dev",
+      "tagline": "This site: a retro ski game and Windows 3.1 desktop on Remix 3 and Cloudflare Workers.",
+      "type": "personal",
+      "status": "active",
+      "start": "2026-08",
+      "end": null,
+      "current": true,
+      "featured": true,
+      "links": {
+        "repo": "https://github.com/davepack/davepack.dev",
+        "live": "https://davepack.dev"
+      },
+      "summary": "A server-rendered personal site on Remix 3 and Cloudflare Workers. A SkiFree-style pixel game plays behind the page, and the content lives in draggable Windows 3.1-style windows. Everything works without JavaScript; Remix client entries and small scripts add motion and interactivity.",
+      "highlights": [
+        "Canvas ski game with an autopilot skier that stays out from behind the content, plus a playable mode, honoring reduced motion.",
+        "Draggable, minimizable windows and desktop icons built from Remix client entries, a custom pointer-drag mixin, and a tested desktop model.",
+        "Skill filter and detail windows built on radios, :has(), native dialogs, and View Transitions, so they work without JavaScript.",
+        "Resume data rendered from one JSON file through a single module that never exposes contact details or unverified entries."
+      ],
+      "skills": [
+        { "skillId": "remix", "usage": "Remix 3 server rendering, client entries, and mixins." },
+        { "skillId": "cloudflare", "usage": "Deployed on Cloudflare Workers with static assets." },
+        { "skillId": "typescript", "usage": "Server components and the browser bundle." },
+        { "skillId": "css", "usage": "Pixel-art UI, light and dark themes, and JavaScript-free interactions with :has()." },
+        { "skillId": "vitest", "usage": "Unit tests for the desktop model." },
+        { "skillId": "ai-native-development", "usage": "Designed and built with Claude Code." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "meeting-notes",
+      "name": "MeetingNotes",
+      "tagline": "A macOS app that records calls, transcribes them on device, and drafts notes with Claude.",
+      "type": "personal",
+      "status": "active",
+      "start": "2026-09",
+      "end": null,
+      "current": true,
+      "featured": true,
+      "links": {
+        "repo": null,
+        "live": null
+      },
+      "summary": "A native macOS menu bar app that records meetings (system audio and microphone), transcribes them on device with Apple's Speech framework, and writes notes through the Claude CLI. Signed and notarized for direct distribution.",
+      "highlights": [
+        "System audio captured with Core Audio process taps, avoiding the Screen Recording permission; mic and system audio on separate tracks give speaker attribution without diarization.",
+        "On-device transcription with SpeechAnalyzer and SpeechTranscriber behind a Transcriber protocol.",
+        "Audio streams to disk as the source of truth, with recovery on launch, capture health warnings, and a compact export sized to fit a two-hour call under Whisper's 25 MB limit.",
+        "Developer ID signing, hardened runtime, and notarization scripted with notarytool."
+      ],
+      "skills": [
+        { "skillId": "llm-integration", "usage": "Note drafting through the Claude CLI with editable prompt templates." },
+        { "skillId": "ai-native-development", "usage": "Built with Claude Code." }
+      ],
+      "stories": []
+    },
+    {
+      "id": "meal-planner",
+      "name": "Meal Planner",
+      "tagline": "A personal meal-planning app: SwiftUI on iOS and macOS, a Cloudflare Durable Object backend, and an MCP server for Claude.",
+      "type": "personal",
+      "status": "active",
+      "start": "2026-08",
+      "end": null,
+      "current": true,
+      "featured": true,
+      "links": {
+        "repo": null,
+        "live": null
+      },
+      "summary": "A single-user meal planner covering plans, recipes, weekly prep, grocery lists, nutrition targets, and reminders. One multiplatform SwiftUI app with a widget talks to a Cloudflare Worker whose Durable Object holds all data in embedded SQLite, and the same Worker serves an MCP server so Claude can plan meals directly.",
+      "highlights": [
+        "Durable Object agent built on the Cloudflare Agents SDK, with SQLite migrations applied on start.",
+        "Remote MCP server behind Cloudflare's Workers OAuth provider, calling the same agent methods as the app.",
+        "HTTP as the source of truth with WebSocket change notifications, avoiding sync conflicts.",
+        "Multiplatform SwiftUI app and WidgetKit extension with no third-party dependencies; Workers runtime tests in Vitest."
+      ],
+      "skills": [
+        { "skillId": "cloudflare", "usage": "Workers, KV, and the Workers OAuth provider." },
+        { "skillId": "mcp", "usage": "Remote MCP server for claude.ai." },
+        { "skillId": "vitest", "usage": "Worker and MCP tests in the Workers runtime." },
+        { "skillId": "ai-native-development", "usage": "Built phase by phase with Claude Code from written build plans." }
       ],
       "stories": []
     }
@@ -815,9 +1053,11 @@
       "name": "react-navigation",
       "url": "https://github.com/react-navigation/react-navigation",
       "role": "contributor",
-      "period": "2017",
-      "summary": "Merged PRs while working at Expo.",
-      "links": { "prs": null }
+      "period": "2017–2018",
+      "summary": "Nine merged PRs, from September 2017 to February 2018, including iPhone X SafeAreaView support across headers, tab bars, and drawers, plus header and drawer fixes and example-app upgrades.",
+      "links": {
+        "prs": "https://github.com/react-navigation/react-navigation/pulls?q=is%3Apr+author%3Adavepack+is%3Amerged"
+      }
     },
     {
       "id": "expo-libraries",
@@ -827,6 +1067,17 @@
       "period": "2017",
       "summary": "Contributions to Expo and React Native ecosystem libraries.",
       "links": { "prs": null }
+    },
+    {
+      "id": "react-native-i18n",
+      "name": "react-native-i18n",
+      "url": "https://github.com/AlexanderZaytsev/react-native-i18n",
+      "role": "contributor",
+      "period": "2017",
+      "summary": "Merged fix for Android LocaleList support below API level 24, found while localizing the Book of Mormon Central app.",
+      "links": {
+        "prs": "https://github.com/AlexanderZaytsev/react-native-i18n/pull/89"
+      }
     }
   ],
 
