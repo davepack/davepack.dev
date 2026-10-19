@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "build:client": "node scripts/build-client.mjs",
-    "events": "node --env-file-if-exists=.env.events scripts/events.mjs",
+    "events": "node --env-file-if-exists=.env.events scripts/events.ts",
+    "dashboard": "node --env-file-if-exists=.env.events --import remix/node-tsx tools/dashboard/server.tsx",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "node --test 'app/**/*.test.ts'",

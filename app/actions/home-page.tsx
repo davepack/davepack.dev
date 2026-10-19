@@ -36,13 +36,13 @@ const DESKTOP_WINDOWS = [
   { id: "skills", label: "Skills", art: "skills" },
 ] as const satisfies { id: string; label: string; art: string }[];
 
-const FONT_STACK =
+export const FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
 const FONT_HREF =
   "https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap";
 
-const fontLinks = (
+export const fontLinks = (
   <>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -54,7 +54,7 @@ const fontLinks = (
 
 // Day on the mountain: fresh snow, ink outlines, a navy title bar, and a red
 // ski-jacket accent.
-const DAY_TOKENS = {
+export const DAY_TOKENS = {
   colorScheme: "light",
   "--bg": "#f7fafd",
   "--ink": "#13161c",
@@ -81,7 +81,7 @@ const DAY_TOKENS = {
 };
 
 // Night skiing.
-const NIGHT_TOKENS = {
+export const NIGHT_TOKENS = {
   colorScheme: "dark",
   "--bg": "#0d1726",
   "--ink": "#e6edf7",
