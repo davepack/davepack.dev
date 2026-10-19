@@ -67,8 +67,8 @@
       "id": "typescript",
       "name": "TypeScript",
       "category": "language",
-      "yearsInProduction": null,
-      "firstUsed": null,
+      "yearsInProduction": 6,
+      "firstUsed": "2020",
       "current": true,
       "proficiency": 4,
       "featured": true,
@@ -345,12 +345,13 @@
       "id": "playwright",
       "name": "Playwright",
       "category": "testing",
-      "yearsInProduction": null,
+      "yearsInProduction": 4,
       "current": true,
       "proficiency": 4,
       "featured": true,
       "summary": "UI test runner for Kroger's e-commerce app, backed by shared mocking infrastructure.",
-      "related": ["msw", "testing-standards"]
+      "related": ["msw", "testing-standards"],
+      "firstUsed": "2022"
     },
     {
       "id": "vitest",
@@ -554,7 +555,7 @@
       "current": false,
       "proficiency": 3,
       "featured": true,
-      "summary": "Contributor to Expo and React Native libraries, including merged PRs to react-navigation.",
+      "summary": "Contributor to React Native open source, with nine merged PRs to react-navigation (including iPhone X safe-area support) and a fix to react-native-i18n.",
       "related": ["react-navigation", "expo"]
     },
     {
@@ -788,11 +789,11 @@
       "featured": true,
       "summary": "Worked on the Expo platform and contributed to the React Native open-source ecosystem.",
       "highlights": [
-        "Open-source contributor to Expo and React Native libraries, including merged PRs to react-navigation.",
+        "Open-source contributor to react-navigation, with merged PRs including iPhone X safe-area support.",
         "Built developer tooling and product features across Electron, React Native, and Node."
       ],
       "skills": [
-        { "skillId": "open-source", "usage": "Contributed to Expo and React Native libraries in the open, with merged PRs to react-navigation." },
+        { "skillId": "open-source", "usage": "Contributed to react-navigation in the open, including iPhone X safe-area support." },
         { "skillId": "react-navigation", "usage": "Merged contributions to one of the most widely used React Native navigation libraries." },
         { "skillId": "react-native", "usage": "Worked on the platform side of React Native development rather than a single app, building features and tooling used by other developers." },
         { "skillId": "expo", "usage": "Built product features and developer tooling for the Expo platform itself." },
@@ -1058,15 +1059,6 @@
       "links": {
         "prs": "https://github.com/react-navigation/react-navigation/pulls?q=is%3Apr+author%3Adavepack+is%3Amerged"
       }
-    },
-    {
-      "id": "expo-libraries",
-      "name": "Expo and React Native libraries",
-      "url": "https://github.com/expo",
-      "role": "contributor",
-      "period": "2017",
-      "summary": "Contributions to Expo and React Native ecosystem libraries.",
-      "links": { "prs": null }
     },
     {
       "id": "react-native-i18n",
