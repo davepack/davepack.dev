@@ -5,6 +5,7 @@ import { Document } from "./document.tsx";
 import { DesktopIcons } from "./public/desktop-icons.tsx";
 import { WindowTitleBar } from "./public/window-title-bar.tsx";
 import { MountainDivider, SkiTracks } from "./home-flourishes.tsx";
+import { SEO_DESCRIPTION, SEO_TITLE, seoHead } from "./home-seo.tsx";
 import { MOTION_OK, PIXEL_FONT, TextLink, windowRules } from "./home-primitives.tsx";
 import { SkiSlope, skiRootRules } from "./home-ski.tsx";
 import { EntryWindows, SkillStickers } from "./home-skills.tsx";
@@ -109,7 +110,16 @@ export const NIGHT_TOKENS = {
 
 export function HomePage(handle: Handle<{ theme: Theme }>) {
   return () => (
-    <Document head={fontLinks}>
+    <Document
+      title={SEO_TITLE}
+      description={SEO_DESCRIPTION}
+      head={
+        <>
+          {fontLinks}
+          {seoHead}
+        </>
+      }
+    >
       <main
         data-ski-root
         mix={css({

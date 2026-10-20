@@ -10,6 +10,7 @@ npm run dev        # wrangler dev at http://localhost:8787 (builds the client bu
 npm run deploy     # also builds the client bundle first
 npm run build:client
 npm test           # node --test over app/**/*.test.ts
+npm run images     # regenerate public/og.png, apple-touch-icon.png, favicon.ico (headless Chrome)
 npm run events     # summarize interaction events; reads .env.events (never .env, which Wrangler would use for deploys)
 npm run dashboard  # local stats dashboard at http://localhost:4400 (same credentials)
 npm run typecheck
@@ -35,6 +36,7 @@ Refer to ./.agents/skills/remix/SKILL.md for the Remix mental model and how to f
 - `app/actions/events.ts` validates the interaction events the page beacons to `POST /events` and writes them to Workers Analytics Engine (binding `EVENTS`, dataset `davepack_events`); `app/actions/public/analytics.ts` sends them. No cookies or identifiers, and visitors with Global Privacy Control or Do Not Track are skipped. The plain scripts report through a `dp:track` window event
 - `tools/dashboard/` is a separate, local-only Remix app on Node (run through `remix/node-tsx`, no build): `analytics.ts` queries Analytics Engine (shared with `scripts/events.ts`), `dashboard-page.tsx` renders the page with the site's styles, `server.tsx` serves it on 127.0.0.1. It never deploys with the site
 - `app/actions/public/` is browser code: `entry.ts` (starts the runtime with `run()`), the desktop model, and the client entries (window title bars, desktop icons)
+- `app/actions/home-seo.tsx` holds the page title, description, Open Graph and Twitter/X cards, and schema.org Person data. The preview image is designed in `scripts/og-image/og.html` and the icons come from `public/favicon.svg`; rerun `npm run images` after changing either
 - Root `public/` contains static files served unchanged from the app root by Cloudflare Workers assets, including the plain scripts `ski.js`, `skills.js`, and `theme.js`
 
 ## Route Ownership

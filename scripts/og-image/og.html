@@ -1,0 +1,277 @@
+<!doctype html>
+<!-- The link-preview image (public/og.png, 1200x630). `npm run images`
+     screenshots this page. Sprites and colors are copied from public/ski.js. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #f7fafd;
+      }
+      canvas {
+        position: absolute;
+        inset: 0;
+        image-rendering: pixelated;
+      }
+      .window {
+        position: absolute;
+        left: 64px;
+        top: 118px;
+        width: 760px;
+        background: #fff;
+        border: 4px solid #13161c;
+        box-shadow: 10px 10px 0 #13161c;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #13161c;
+      }
+      .bar {
+        display: flex;
+        height: 48px;
+        background: #1d2f91;
+        border-bottom: 4px solid #13161c;
+      }
+      .box {
+        width: 48px;
+        background: #c3cad4;
+        box-shadow:
+          inset -4px -4px 0 #7d8796,
+          inset 4px 4px 0 #fff;
+        display: grid;
+        place-items: center;
+      }
+      .box.menu {
+        border-right: 4px solid #13161c;
+      }
+      .box.menu::before {
+        content: "";
+        width: 20px;
+        height: 5px;
+        background: #13161c;
+      }
+      .box.min {
+        border-left: 4px solid #13161c;
+      }
+      .box.min::before {
+        content: "";
+        border: 9px solid transparent;
+        border-top-color: #13161c;
+        border-bottom: 0;
+      }
+      .bar h1 {
+        flex: 1;
+        margin: 0;
+        align-self: center;
+        text-align: center;
+        color: #fff;
+        font: 600 26px "Pixelify Sans";
+        letter-spacing: 0.04em;
+      }
+      .body {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        padding: 44px 44px 48px;
+      }
+      .body img {
+        width: 136px;
+        height: 136px;
+        object-fit: cover;
+        border: 4px solid #13161c;
+        box-shadow: 6px 6px 0 #13161c;
+      }
+      .name {
+        margin: 0;
+        font: 600 76px/1 "Pixelify Sans";
+      }
+      .tracks {
+        display: block;
+        margin: 14px 0 18px;
+      }
+      .role {
+        margin: 0;
+        white-space: nowrap;
+        font-size: 26px;
+        font-weight: 600;
+        color: #13161c;
+      }
+      .where {
+        margin: 8px 0 0;
+        font-size: 24px;
+        color: #566173;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="slope" width="240" height="126" style="width: 1200px; height: 630px"></canvas>
+    <div class="window">
+      <div class="bar">
+        <span class="box menu"></span>
+        <h1>davepack.dev</h1>
+        <span class="box min"></span>
+      </div>
+      <div class="body">
+        <img src="../../public/profile.jpeg" alt="" />
+        <div>
+          <p class="name">Dave Pack</p>
+          <svg class="tracks" width="330" height="16" viewBox="0 0 330 16">
+            <path
+              d="M2 6 Q12 0 22 6 T42 6 T62 6 T82 6 T102 6 T122 6 T142 6 T162 6 T182 6 T202 6 T222 6 T242 6 T262 6 T282 6 T302 6 T322 6"
+              fill="none"
+              stroke="#d12b2b"
+              stroke-width="3"
+            />
+            <path
+              d="M2 13 Q12 7 22 13 T42 13 T62 13 T82 13 T102 13 T122 13 T142 13 T162 13 T182 13 T202 13 T222 13 T242 13 T262 13 T282 13 T302 13 T322 13"
+              fill="none"
+              stroke="#d12b2b"
+              stroke-width="3"
+            />
+          </svg>
+          <p class="role">Full-stack engineer &amp; web platform lead</p>
+          <p class="where">Arvada, Colorado</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const P = {
+        k: "#141820",
+        g: "#2f8f46",
+        G: "#1d5e30",
+        b: "#7a4a24",
+        B: "#2251c7",
+        r: "#d12b2b",
+        s: "#f2c29b",
+        y: "#f2b630",
+        o: "#9aa3ad",
+        O: "#5d6670",
+        w: "#ffffff",
+        n: "#4a5160",
+        D: "#4e2f17",
+        T: "#d9a066",
+        R: "#a86b3c",
+      };
+      const S = {
+        tree: [
+          ".....G.....",
+          "....GgG....",
+          "...GgggG...",
+          "....GgG....",
+          "...GgggG...",
+          "..GgggggG..",
+          "...GgggG...",
+          "..GgggggG..",
+          ".GgggggggG.",
+          "..GgggggG..",
+          ".GgggggggG.",
+          "GgggggggggG",
+          "GGGGGbGGGGG",
+          ".....b.....",
+          "....bbb....",
+        ],
+        snowTree: [
+          ".....w.....",
+          "....wwG....",
+          "...GwggG...",
+          "....wgG....",
+          "...wwggG...",
+          "..GgggwwG..",
+          "...wwgwG...",
+          "..GgwwggG..",
+          ".GgggggwwG.",
+          "..wwgggwG..",
+          ".GgggwwggG.",
+          "GgwwggggwwG",
+          "GGGGGbGGGGG",
+          ".....b.....",
+          "....bbb....",
+        ],
+        smallTree: ["...G...", "..GgG..", ".GgggG.", "..GgG..", ".GgggG.", "GgggggG", "...b..."],
+        rock: ["...OOOO...", "..OooowOO.", ".OoooooooO", "OooooooooO", "OOOOOOOOOO"],
+        stump: ["..TTTTT..", ".TRRRRRT.", ".TTRRRTT.", ".DbTTTbD.", ".bbDbbbb.", "DbbbbDbbD"],
+        red: ["krrr", "krrr", "kr..", "k...", "k...", "k...", "k...", "k..."],
+        blue: ["kBBB", "kBBB", "kB..", "k...", "k...", "k...", "k...", "k..."],
+        skier: [
+          "...rrr...",
+          "..rrrrr..",
+          "..sssss..",
+          "..sssss..",
+          "...sss...",
+          "..BBBBB..",
+          ".BBBBBBB.",
+          "sBBBBBBBs",
+          "..BBBBB..",
+          "..nnnnn..",
+          "..nn.nn..",
+          "..n...n..",
+        ],
+      };
+      const ctx = document.getElementById("slope").getContext("2d");
+      function draw(name, x, y) {
+        // bottom-center anchor, like the game
+        const rows = S[name];
+        rows.forEach((row, j) =>
+          [...row].forEach((c, i) => {
+            if (c === ".") return;
+            ctx.fillStyle = P[c];
+            ctx.fillRect(Math.round(x - row.length / 2) + i, y - rows.length + 1 + j, 1, 1);
+          }),
+        );
+      }
+      // Snow texture: a fixed scatter of specks.
+      let seed = 7;
+      const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      ctx.fillStyle = "#e2e9f2";
+      for (let i = 0; i < 260; i++)
+        ctx.fillRect(Math.floor(rnd() * 240), Math.floor(rnd() * 126), rnd() < 0.2 ? 2 : 1, 1);
+      // Ski tracks carving down to the skier.
+      ctx.fillStyle = "#d6dfeb";
+      for (let y = 0; y < 79; y += 1) {
+        const x = 196 + Math.sin(y / 9) * 9;
+        ctx.fillRect(Math.round(x) - 2, y, 1, 1);
+        ctx.fillRect(Math.round(x) + 2, y, 1, 1);
+      }
+      // Scenery, kept to the right of the window and along the edges.
+      [
+        ["tree", 173, 30],
+        ["snowTree", 226, 40],
+        ["smallTree", 214, 12],
+        ["tree", 228, 100],
+        ["snowTree", 178, 112],
+        ["smallTree", 160, 92],
+        ["rock", 206, 118],
+        ["stump", 222, 70],
+        ["tree", 8, 18],
+        ["smallTree", 20, 122],
+        ["snowTree", 12, 112],
+        ["red", 190, 60],
+        ["blue", 212, 60],
+        ["tree", 150, 18],
+        ["smallTree", 236, 124],
+      ].forEach(([n, x, y]) => draw(n, x, y));
+      // The skier, mid-turn, with skis and poles.
+      const sx = 203,
+        sy = 84;
+      ctx.fillStyle = P.y;
+      for (let i = -4; i <= 6; i++) {
+        ctx.fillRect(sx - 2 + Math.round(i * 0.25), sy + i, 1, 1);
+        ctx.fillRect(sx + 2 + Math.round(i * 0.25), sy + i, 1, 1);
+      }
+      draw("skier", sx, sy);
+      ctx.fillStyle = P.n;
+      for (let i = 0; i < 5; i++) {
+        ctx.fillRect(sx - 4, sy - 4 + i, 1, 1);
+        ctx.fillRect(sx + 4, sy - 4 + i, 1, 1);
+      }
+      document.fonts.ready.then(() => (document.body.dataset.ready = "1"));
+    </script>
+  </body>
+</html>
