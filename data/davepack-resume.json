@@ -33,7 +33,7 @@
       "since": "2011"
     },
     "summaryShort": "Full-stack engineer: 15 years building for the web, 11 shipping products in JavaScript, React, and Node. Web Platform Lead for Kroger's e-commerce site. Daily practitioner of AI-native development.",
-    "summary": "I'm a full-stack engineer with 15 years building for the web and 11 shipping production software in JavaScript, React, and Node. For the last eight years I've been Web Platform Lead for Kroger's e-commerce site, where I lead a four-developer platform team that owns architecture, performance, and code quality for a codebase shared by more than twenty teams and serving over eleven million weekly visitors. I influence through collaboration rather than authority: architecture and standards boards, ADRs, and a lot of pairing. I like modernizing legacy systems while keeping them stable, and I practice AI-native development every day with Claude Code.",
+    "summary": "I'm a full-stack engineer with 15 years building for the web and 11 shipping production software in JavaScript, React, and Node. I've been at Kroger for eight years and Web Platform Lead for its e-commerce site for the last three, where I lead a four-developer platform team that owns architecture, performance, and code quality for a codebase shared by more than twenty teams and serving over eleven million weekly visitors. I influence through collaboration rather than authority: architecture and standards boards, ADRs, and a lot of pairing. I like modernizing legacy systems while keeping them stable, and I practice AI-native development every day with Claude Code.",
     "traits": [
       {
         "name": "Intuitive UI engineer",
@@ -393,8 +393,8 @@
       "id": "testing-standards",
       "name": "Testing Practices & Standards",
       "category": "practice",
-      "yearsInProduction": 8,
-      "firstUsed": "2018",
+      "yearsInProduction": 6,
+      "firstUsed": "2020",
       "current": true,
       "proficiency": 4,
       "featured": true,
@@ -442,8 +442,8 @@
       "id": "architecture",
       "name": "Software Architecture & ADRs",
       "category": "practice",
-      "yearsInProduction": 8,
-      "firstUsed": "2018",
+      "yearsInProduction": 6,
+      "firstUsed": "2020",
       "current": true,
       "proficiency": 4,
       "featured": true,
@@ -454,8 +454,8 @@
       "id": "code-quality",
       "name": "Code Quality Standards",
       "category": "practice",
-      "yearsInProduction": 8,
-      "firstUsed": "2018",
+      "yearsInProduction": 6,
+      "firstUsed": "2020",
       "current": true,
       "proficiency": 4,
       "featured": true,
@@ -502,20 +502,20 @@
       "id": "technical-leadership",
       "name": "Technical Leadership",
       "category": "leadership",
-      "yearsInProduction": 7,
-      "firstUsed": "2019",
+      "yearsInProduction": 6,
+      "firstUsed": "2020",
       "current": true,
       "proficiency": 5,
       "featured": true,
-      "summary": "Tech lead since the first year at Kroger; leads a four-developer platform team and influences 20+ contributing teams without formal authority.",
+      "summary": "Tech lead at Kroger since 2020 and Web Platform Lead since 2023; leads a four-developer platform team and influences 20+ contributing teams without formal authority.",
       "related": ["mentoring", "architecture", "cross-team-collaboration"]
     },
     {
       "id": "mentoring",
       "name": "Mentoring & Pairing",
       "category": "leadership",
-      "yearsInProduction": 7,
-      "firstUsed": "2019",
+      "yearsInProduction": 6,
+      "firstUsed": "2020",
       "current": true,
       "proficiency": 5,
       "featured": true,
@@ -717,9 +717,21 @@
       "id": "kroger",
       "title": "Web Platform Lead / Front-end Developer",
       "titleProgression": [
-        { "title": "Front-end Web Developer (team contributor)", "start": "2018-07", "end": null, "verify": true },
-        { "title": "Tech Lead", "start": "2019", "end": null, "verify": true },
-        { "title": "Web Platform Lead", "start": null, "end": null, "verify": true }
+        {
+          "title": "Front-end Web Developer",
+          "start": "2018-07",
+          "end": "2020"
+        },
+        {
+          "title": "Tech Lead",
+          "start": "2020",
+          "end": "2023"
+        },
+        {
+          "title": "Web Platform Lead",
+          "start": "2023",
+          "end": null
+        }
       ],
       "org": "Kroger Technology",
       "orgUrl": "https://www.kroger.com",
@@ -745,7 +757,7 @@
         "Ship full-stack features end-to-end in a large legacy codebase, modernizing incrementally while keeping production stable.",
         "Drive adoption of standards through pairing, documentation, and cross-team facilitation rather than mandate.",
         "Practice AI-native development daily with Claude Code; currently leading an AI-accelerated migration of the legacy React Router v5 app and home-built SSR server to React Router 7 framework mode.",
-        "Moved from contributor to tech lead in the first year; twice moved to lead a new team, each time leaving behind a teammate prepared to step into the tech lead role."
+        "Moved from contributor to tech lead in 2020 and to Web Platform Lead in 2023; twice moved to lead a new team, each time leaving behind a teammate prepared to step into the tech lead role."
       ],
       "skills": [
         { "skillId": "javascript", "usage": "The language across the React front-end and the Node services and SSR server behind it." },
@@ -768,7 +780,7 @@
         { "skillId": "msw", "usage": "Built MSW-based server-side mocking so Playwright UI tests run against deterministic API responses." },
         { "skillId": "legacy-modernization", "usage": "Eight years of incremental modernization in a large legacy codebase, always with production stability as the constraint. The React Router migration is the current chapter." },
         { "skillId": "ai-native-development", "usage": "Uses Claude Code daily. On the React Router migration, AI exploration surfaced a path that skips two intermediate versions and a large amount of throwaway code; AI now accelerates the implementation, and the workflow evolves with every prompt." },
-        { "skillId": "technical-leadership", "usage": "Tech lead from the first year; leads a four-developer platform team and sets direction for 20+ contributing teams without formal authority over them." },
+        { "skillId": "technical-leadership", "usage": "Tech lead since 2020 and Web Platform Lead since 2023; leads a four-developer platform team and sets direction for 20+ contributing teams without formal authority over them." },
         { "skillId": "mentoring", "usage": "Spent tech-lead time preparing teammates to lead. Twice moved to a new team and left behind an engineer who stepped into the tech lead role." },
         { "skillId": "cross-team-collaboration", "usage": "Facilitates communication and standards across 20+ teams contributing to one codebase; partners with QA, product, and design as peers." },
         { "skillId": "agile-scrum", "usage": "Agile delivery in Scrum teams across a codebase shared by 20+ teams." }
@@ -841,14 +853,14 @@
       "end": "2016-04",
       "current": false,
       "featured": true,
-      "summary": "Cofounded an early-stage startup and built the first product from scratch; the startup wound down before launch.",
+      "summary": "Cofounded an early-stage startup and led its engineering team through the first product; the startup wound down before launch.",
       "highlights": [
-        "Built the first product from scratch with Node, Meteor 1.3, MongoDB, React, and ES2015.",
-        "Owned every technical decision as the sole engineer: architecture, stack, and delivery."
+        "Led the build of the first product on Node, Meteor 1.3, MongoDB, React, and ES2015.",
+        "Managed a three-person engineering team, including an infrastructure engineer and a front-end engineer, and owned architecture, stack, and delivery."
       ],
       "outcome": "Wound down before launch.",
       "skills": [
-        { "skillId": "technical-leadership", "usage": "Sole engineer and technical cofounder; owned the architecture, the stack, and the roadmap for a greenfield product." },
+        { "skillId": "technical-leadership", "usage": "Technical cofounder managing a three-person engineering team; owned the architecture, the stack, and the roadmap for the first product." },
         { "skillId": "react", "usage": "Built the product's front-end in React while it was still early in mainstream adoption." },
         { "skillId": "node", "usage": "Server-side runtime for the Meteor-based product." },
         { "skillId": "meteor", "usage": "Full-stack framework (v1.3) for rapid product development." },
@@ -1105,7 +1117,7 @@
       "title": "Leaving behind a tech lead",
       "experienceId": "kroger",
       "skills": ["mentoring", "technical-leadership", "cross-team-collaboration"],
-      "context": "I joined Kroger as a team contributor and became tech lead in my first year.",
+      "context": "I joined Kroger as a team contributor in 2018 and became tech lead in 2020.",
       "problem": "A tech lead who is the only person who can lead is a bottleneck, and a team that can't survive its lead leaving isn't healthy.",
       "action": "As tech lead I spent a lot of time pairing with teammates and preparing them to lead: sharing context, handing over responsibility a little before they felt ready, and trusting them with it.",
       "result": "I moved to lead other teams twice, and both times left behind an engineer who was prepared to step into the tech lead role of the team I was leaving.",
