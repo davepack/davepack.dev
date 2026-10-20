@@ -1,12 +1,13 @@
 // Search and link-preview metadata for the home page: canonical URL, Open
 // Graph and Twitter/X cards (with the preview image from
-// `npm run og-image`), mobile theme colors, and a schema.org Person.
+// `npm run images`; bump ?v= when it changes so previews refetch it), mobile
+// theme colors, and a schema.org Person.
 
 export const SITE_URL = "https://davepack.dev/";
 export const SEO_TITLE = "Dave Pack · Full-stack engineer & web platform lead";
 export const SEO_DESCRIPTION =
   "Dave Pack, full-stack engineer and web platform lead in Arvada, Colorado.";
-const IMAGE = { url: `${SITE_URL}og.png`, width: 1200, height: 630 };
+const IMAGE = { url: `${SITE_URL}og.png?v=2`, width: 1200, height: 630 };
 const IMAGE_ALT =
   "Dave Pack, full-stack engineer and web platform lead, in a retro desktop window over a snowy ski slope.";
 

@@ -92,9 +92,21 @@
         margin: 0;
         font: 600 76px/1 "Pixelify Sans";
       }
+      /* The tracks are positioned absolutely so their long viewBox never
+         widens the name; they span exactly the name's width. */
+      .name-block {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 18px;
+        padding-bottom: 30px;
+      }
       .tracks {
-        display: block;
-        margin: 14px 0 18px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 16px;
       }
       .role {
         margin: 0;
@@ -121,21 +133,24 @@
       <div class="body">
         <img src="../../public/profile.jpeg" alt="" />
         <div>
-          <p class="name">Dave Pack</p>
-          <svg class="tracks" width="330" height="16" viewBox="0 0 330 16">
-            <path
-              d="M2 6 Q12 0 22 6 T42 6 T62 6 T82 6 T102 6 T122 6 T142 6 T162 6 T182 6 T202 6 T222 6 T242 6 T262 6 T282 6 T302 6 T322 6"
-              fill="none"
-              stroke="#d12b2b"
-              stroke-width="3"
-            />
-            <path
-              d="M2 13 Q12 7 22 13 T42 13 T62 13 T82 13 T102 13 T122 13 T142 13 T162 13 T182 13 T202 13 T222 13 T242 13 T262 13 T282 13 T302 13 T322 13"
-              fill="none"
-              stroke="#d12b2b"
-              stroke-width="3"
-            />
-          </svg>
+          <div class="name-block">
+            <p class="name">Dave Pack</p>
+            <!-- Like the site: a long track, clipped to the width of the name. -->
+            <svg class="tracks" viewBox="0 0 640 16" preserveAspectRatio="xMinYMid slice">
+              <path
+                d="M2 6 Q12 0 22 6 T42 6 T62 6 T82 6 T102 6 T122 6 T142 6 T162 6 T182 6 T202 6 T222 6 T242 6 T262 6 T282 6 T302 6 T322 6 T342 6 T362 6 T382 6 T402 6 T422 6 T442 6 T462 6 T482 6 T502 6 T522 6 T542 6 T562 6 T582 6 T602 6 T622 6"
+                fill="none"
+                stroke="#d12b2b"
+                stroke-width="3"
+              />
+              <path
+                d="M2 13 Q12 7 22 13 T42 13 T62 13 T82 13 T102 13 T122 13 T142 13 T162 13 T182 13 T202 13 T222 13 T242 13 T262 13 T282 13 T302 13 T322 13 T342 13 T362 13 T382 13 T402 13 T422 13 T442 13 T462 13 T482 13 T502 13 T522 13 T542 13 T562 13 T582 13 T602 13 T622 13"
+                fill="none"
+                stroke="#d12b2b"
+                stroke-width="3"
+              />
+            </svg>
+          </div>
           <p class="role">Full-stack engineer &amp; web platform lead</p>
           <p class="where">Arvada, Colorado</p>
         </div>
